@@ -1,7 +1,13 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion';
 
 export default function ProductPage() {
+
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
+
     const router = useRouter();
     const { id } = router.query;
     const [product, setProduct] = useState(null);
@@ -23,18 +29,44 @@ export default function ProductPage() {
         fetchProduct();
     }, [id]);
 
-    if (loading) return <p className='text-center p-8'>Loading...</p>
-    if (!product) return <p className='text-center p-8'>Product not found</p>;
+    if (loading) return <p className='text-white text-3xl text-center p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen'>Loading...</p>
+    if (!product) return <p className='text-white text-3xl text-center p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen'>Product not found</p>;
 
     return (
-        <div className='p-8 flex bg-black/80 text-white'>
-            <img src={product.image} alt={product.title} className='w-auto h-auto mb-4' />
-            <div className='flex-col ml-8 items-center justify-center'>
-                <h1 className='text-2xl font-bold mb-4'>{product.title}</h1>
-                <p className='text-lg mb-4'>${product.price}</p>
-                <p className='mb-4'>{product.description}</p>
-                <button className='bg-blue-500 text-white px-4 py-2 rounded'>Add to Cart</button>
+        <div className='min-h-screen p-5 '>
+            <nav className="text-sm text-black mb-4">
+                <span className="hover:underline cursor-pointer">Home</span> /
+                <span className="hover:underline cursor-pointer ml-1">Products</span> /
+                <span className="text-purple-400 ml-1">{capitalize(product.category)}</span> /
+                <span className="text-blue-600 ml-1">{product.title}</span>
+            </nav>
+
+            <div className="gap-5 text-black p-8 flex flex-col md:flex-row items-center md:items-start justify-evenly">
+                <img
+                    src={product.image}
+                    alt={product.title}
+                    className="w-72 h-72 md:w-auto md:h-auto object-contain"
+                />
+                <div className="max-w-xl flex flex-col gap-4">
+                    <h1 className=" text-3xl md:text-4xl font-bold">{product.title}</h1>
+                    <p className="text-xl font-semibold">${product.price}</p>
+                    <p className="text-lg  leading-relaxed">{product.description}</p>
+                    <div className="flex items-center gap-2">
+                        <span className="text-yellow-500 text-lg font-semibold">Rating:</span>
+                        <span className="text-lg">{product.rating.rate} / 5</span>
+                        <span className="text-gray-400 text-sm">({product.rating.count} reviews)</span>
+                    </div>
+                    {/* if product category includes the word 'clothing', show size options */}
+                    <div className="flex items-center space-x-2 mb-4 gap-2">
+                        <label htmlFor="qty" className="text-sm">Qty:</label>
+                        <input id="qty" type="number" min="1" defaultValue="1" className="w-16 p-1 rounded bg-white border text-black" />
+                    </div>
+                    <button className="bg-emerald-600 hover:bg-emerald-700 transition-colors px-6 py-3 rounded-lg mt-4 text-white font-medium shadow-md cursor-pointer">
+                        Add to Cart
+                    </button>
+                </div>
             </div>
         </div>
+
     )
 }
