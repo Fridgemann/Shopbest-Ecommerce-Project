@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function ProductPage() {
 
@@ -35,7 +36,8 @@ export default function ProductPage() {
     return (
         <div className='min-h-screen p-5 '>
             <nav className="text-sm text-black mb-4">
-                <span className="hover:underline cursor-pointer">Home</span> /
+                {/* keep the format same for linking as 'Home' and it'll be golden */}
+                <Link href='/'><span className="hover:underline cursor-pointer">Home</span></Link> /
                 <span className="hover:underline cursor-pointer ml-1">Products</span> /
                 <span className="text-purple-400 ml-1">{capitalize(product.category)}</span> /
                 <span className="text-blue-600 ml-1">{product.title}</span>
@@ -57,6 +59,21 @@ export default function ProductPage() {
                         <span className="text-gray-400 text-sm">({product.rating.count} reviews)</span>
                     </div>
                     {/* if product category includes the word 'clothing', show size options */}
+                    {product.category.toLowerCase().includes('clothing') && (
+                        <div className="mt-4 mb-2">
+                            <p className="mb-2 font-semibold">Choose a size:</p>
+                            <div className="flex gap-2">
+                                {['S', 'M', 'L', 'XL'].map(size => (
+                                    <button
+                                        key={size}
+                                        className="px-3 py-1 border border-gray-400 rounded hover:bg-gray-800 hover:text-white transition"
+                                    >
+                                        {size}
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                     <div className="flex items-center space-x-2 mb-4 gap-2">
                         <label htmlFor="qty" className="text-sm">Qty:</label>
                         <input id="qty" type="number" min="1" defaultValue="1" className="w-16 p-1 rounded bg-white border text-black" />
