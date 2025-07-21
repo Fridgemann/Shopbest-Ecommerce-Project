@@ -1,8 +1,16 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 export default function LandingPage() {
+  const [products, setProducts] = useState([]);
+  
+  useEffect(() => {
+    fetch('http://localhost:5000/api/products') // change to your backend URL if deployed
+      .then(res => res.json())
+      .then(data => setProducts(data))
+      .catch(err => console.error('Failed to fetch products:', err));
+  }, []);
   return (
     <div className="bg-black text-white">
       {/* hero section */}
@@ -61,11 +69,17 @@ export default function LandingPage() {
       <section className="py-16 px-8 bg-gray-950">
         <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center">Featured Products</h2>
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
-          {[1, 2, 3, 4].map(i => (
-            <div key={i} className="bg-gray-900 rounded-lg p-4 hover:bg-gray-800 transition">
-              <div className="w-full h-48 bg-gray-700 rounded mb-4" />
-              <h3 className="text-white font-semibold mb-2">Product Name</h3>
-              <p className="text-blue-400">$00.00</p>
+          {products.map(product => (
+            <div key={product.id} className="bg-gray-900 rounded-lg p-4 hover:bg-gray-800 transition">
+              <Image 
+              src={product.image}
+              alt={product.title}
+              width={200}
+              height={200}
+              className="w-full h-48 object-contain mb-4"
+              ></Image>
+              <h3 className="text-white font-semibold mb-2">{product.title}</h3>
+              <p className="text-blue-400">${product.price}</p>
             </div>
           ))}
         </div>
