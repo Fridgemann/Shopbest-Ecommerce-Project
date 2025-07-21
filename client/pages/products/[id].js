@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { getSlugFromCategoryName } from '@/lib/categoryMap';
 
 
 const RelatedProducts = ({ currentProductId, currentCategory }) => {
@@ -84,7 +85,7 @@ export default function ProductPage() {
                     {/* keep the format same for linking as 'Home' and it'll be golden */}
                     <Link href='/'><span className="hover:underline cursor-pointer">Home</span></Link> /
                     <Link href='/products'><span className="hover:underline cursor-pointer ml-1">Products</span></Link> /
-                    <span className="text-purple-400 ml-1">{capitalize(product.category)}</span> /
+                    <Link href={`/categories/${getSlugFromCategoryName(product.category)}`}><span className="text-purple-400 ml-1 hover:underline">{capitalize(product.category)}</span></Link> /
                     <span className="text-blue-600 ml-1">{product.title}</span>
                 </nav>
 
