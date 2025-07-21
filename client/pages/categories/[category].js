@@ -46,7 +46,7 @@ export default function CategoryPage() {
             <nav className="mb-6 text-sm text-gray-400">
                 <Link href="/"><span className="hover:underline cursor-pointer">Home</span></Link> /
                 <Link href="/products"><span className="hover:underline cursor-pointer ml-1">Products</span></Link> /
-                <span className="text-blue-400 ml-1">{categoryName ? categoryName : 'Category'}</span>
+                <span className="text-blue-400 ml-1">{categoryName ? categoryName.charAt(0).toUpperCase() + categoryName.slice(1) : 'Category'}</span>
             </nav>
             <h1 className="text-3xl font-bold mb-6 capitalize text-blue-400">
                 Category: {categoryName}
