@@ -6,10 +6,10 @@ const router = express.Router();
 
 // register
 router.post('/register', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, email, password } = req.body;
     const hashed = await bcrypt.hash(password, 10);
     try {
-        const user = new User({ username, password: hashed });
+        const user = new User({ username, email, password: hashed });
         console.log('Registering user:', user);
         res.status(201).json(await user.save());
     } catch (err) {
@@ -47,16 +47,41 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/me', (req, res) => {
-    const token = req.cookies?.token;
-    if (!token) return res.status(401).json({ message: 'Not logged in' });
+router.get('/me', async (req, res) => {
+  const token = req.cookies?.token;
+  if (!token) return res.status(401).json({ message: 'Not logged in' });
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        res.json({ userId: decoded.userId });
-    } catch {
-        res.status(401).json({ message: 'Invalid token' });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.userId);
+
+    if (!user) {
+      // User was deleted → clear the cookie and return 404
+      res.clearCookie('token', {
+        httpOnly: true,
+        sameSite: 'Lax',
+        secure: false, // set to true in production with HTTPS
+      });
+      return res.status(404).json({ message: 'User not found' });
     }
+
+    // If user exists, return their data
+    res.json({ userId: user._id, username: user.username });
+  } catch (err) {
+    return res.status(401).json({ message: 'Invalid token' });
+  }
 });
+
+
+router.post('/logout', (req, res) => {
+    res.clearCookie('token', {
+        httpOnly: true,
+        sameSite: 'Lax',
+        secure: false // true if you're using HTTPS
+    });
+    res.json({ message: 'Logged out' });
+});
+
+
 
 module.exports = router;

@@ -1,20 +1,19 @@
-import Link from 'next/link'
-import Image from 'next/image'
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-
 
 const Login = () => {
   const router = useRouter();
   return (
     <button
       onClick={() => router.push('/login')}
-      className="bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition cursor-pointer"
+      className="mb-5 bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition cursor-pointer"
     >
       Login
     </button>
   );
-}
+};
 
 const Register = () => {
   const router = useRouter();
@@ -26,18 +25,60 @@ const Register = () => {
       Register
     </button>
   );
-}
+};
+
+const Logout = ({ user, setUser }) => {
+  const router = useRouter();
+  async function handleLogout() {
+    try {
+      const res = await fetch('http://localhost:5000/logout', {
+        method: 'POST',
+        credentials: 'include', // make sure cookies are sent
+      });
+
+      if (res.ok) {
+        setUser(null); // clear user state on success
+      } else {
+        console.error('Logout failed');
+      }
+    } catch (err) {
+      console.error('Error during logout:', err);
+    }
+  }
+  return (
+    <button
+      onClick={handleLogout}
+      className="mb-5 bg-red-500 px-6 py-3 rounded-lg font-semibold hover:bg-red-600 transition cursor-pointer"
+    >
+      Logout
+    </button>
+  );
+};
 
 
 export default function LandingPage() {
   const [products, setProducts] = useState([]);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/products') // change to your backend URL if deployed
+    fetch('http://localhost:5000/api/products')
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error('Failed to fetch products:', err));
   }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/me', {
+      credentials: 'include',
+    })
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data && data.userId) setUser(data);
+        else setUser(null);
+      })
+      .catch(() => setUser(null));
+  }, []);
+
   return (
     <div className="bg-black text-white">
       {/* hero section */}
@@ -48,11 +89,21 @@ export default function LandingPage() {
         <p className="text-gray-400 text-lg mb-8">
           Quality, Variety, and Fast Delivery — All in One Place.
         </p>
-        <Link href="/products" className="mb-5 bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
-          Shop Now
-        </Link>
-        <Register />
-        <Login />
+
+        {user ? (
+          <>
+            <div className="mb-5 text-green-400">Welcome back, {user.username}!</div>
+            <Link href="/products" className="mb-5 bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+              Shop Now
+            </Link>
+            <Logout user={user} setUser={setUser} />
+          </>
+        ) : (
+          <>
+            <Login />
+            <Register />
+          </>
+        )}
       </section>
 
       {/* features */}
