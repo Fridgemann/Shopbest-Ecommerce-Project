@@ -1,37 +1,59 @@
-// pages/login.tsx or login.js
 import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
-export default function Login() {
+export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [err, setErr] = useState('');
   const router = useRouter();
 
   async function handleLogin(e) {
     e.preventDefault();
-    const res = await fetch('http://localhost:5000/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, password }),
-    });
+    setErr('');
 
-    const data = await res.json();
-    if (res.ok) {
-      localStorage.setItem('token', data.token);
-      router.push('/');
-    } else {
-      alert(data.error);
+    try {
+      const res = await fetch('http://localhost:5000/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Login failed');
+
+      router.push('/'); // go back to home or dashboard
+    } catch (err) {
+      setErr(err.message);
     }
   }
 
   return (
-    <form onSubmit={handleLogin} className="p-8 max-w-md mx-auto bg-black text-white">
-      <h1 className="text-xl mb-4">Login</h1>
-      <input placeholder="Username" className="mb-4 p-2 w-full bg-gray-800"
-        value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" placeholder="Password" className="mb-4 p-2 w-full bg-gray-800"
-        value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button className="bg-blue-600 px-4 py-2 rounded">Login</button>
+    <form
+      onSubmit={handleLogin}
+      className="flex flex-col gap-4 max-w-sm mx-auto mt-20"
+    >
+      <h2 className="text-2xl font-bold text-center">Login</h2>
+      <input
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        placeholder="Username"
+        className="p-2 border rounded"
+      />
+      <input
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder="Password"
+        className="p-2 border rounded"
+      />
+      {err && <p className="text-red-500">{err}</p>}
+      <button
+        type="submit"
+        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+      >
+        Login
+      </button>
     </form>
   );
 }

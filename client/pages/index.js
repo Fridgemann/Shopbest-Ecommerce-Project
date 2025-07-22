@@ -1,10 +1,37 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { use, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+
+const Login = () => {
+  const router = useRouter();
+  return (
+    <button
+      onClick={() => router.push('/login')}
+      className="bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition cursor-pointer"
+    >
+      Login
+    </button>
+  );
+}
+
+const Register = () => {
+  const router = useRouter();
+  return (
+    <button
+      onClick={() => router.push('/register')}
+      className="mb-5 bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition cursor-pointer"
+    >
+      Register
+    </button>
+  );
+}
+
 
 export default function LandingPage() {
   const [products, setProducts] = useState([]);
-  
+
   useEffect(() => {
     fetch('http://localhost:5000/api/products') // change to your backend URL if deployed
       .then(res => res.json())
@@ -21,9 +48,11 @@ export default function LandingPage() {
         <p className="text-gray-400 text-lg mb-8">
           Quality, Variety, and Fast Delivery — All in One Place.
         </p>
-        <Link href="/products" className="bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
+        <Link href="/products" className="mb-5 bg-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-600 transition">
           Shop Now
         </Link>
+        <Register />
+        <Login />
       </section>
 
       {/* features */}
@@ -71,12 +100,12 @@ export default function LandingPage() {
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           {products.map(product => (
             <div key={product.id} className="bg-gray-900 rounded-lg p-4 hover:bg-gray-800 transition">
-              <Image 
-              src={product.image}
-              alt={product.title}
-              width={200}
-              height={200}
-              className="w-full h-48 object-contain mb-4"
+              <Image
+                src={product.image}
+                alt={product.title}
+                width={200}
+                height={200}
+                className="w-full h-48 object-contain mb-4"
               ></Image>
               <h3 className="text-white font-semibold mb-2">{product.title}</h3>
               <p className="text-blue-400">${product.price}</p>
