@@ -22,6 +22,10 @@ app.use('/api/products', productsRouter);
 const authRoutes = require('./routes/auth');
 app.use('/', authRoutes);
 
+const cartRoutes = require('./routes/cart');
+app.use('/', cartRoutes);
+
+
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
