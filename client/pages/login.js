@@ -22,11 +22,7 @@ export default function LoginPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
 
-      // Redirect to homepage and reload to update login state
       router.push('/');
-      setTimeout(() => {
-        window.location.reload();
-      }, 200);
     } catch (err) {
       setErr(err.message);
     }
