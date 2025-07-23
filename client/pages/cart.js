@@ -103,8 +103,10 @@ export default function CartPage() {
             </h2>
             <div className="flex justify-end mt-6">
                 <button
-                    className="mt-2 ml-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition cursor-pointer"
-                    onClick={() => router.push('/checkout')} // Go to mock checkout
+                    className={`mt-2 ml-4 bg-blue-600 text-white px-4 py-2 rounded transition
+    ${cart.length === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700 cursor-pointer"}`}
+                    onClick={() => cart.length > 0 && router.push('/checkout')}
+                    disabled={cart.length === 0}
                 >
                     Proceed to Checkout
                 </button>
