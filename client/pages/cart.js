@@ -34,11 +34,14 @@ export default function CartPage() {
         fetchCartAndProducts();
     }, []);
 
-    async function removeFromCart(productId) {
-        const res = await fetch(`http://localhost:5000/cart/${productId}`, {
-            method: 'DELETE',
-            credentials: 'include' // include cookies for auth
-        });
+    async function removeFromCart(productId, size) {
+        const res = await fetch(
+            `http://localhost:5000/cart/${productId}?size=${encodeURIComponent(size || "")}`,
+            {
+                method: "DELETE",
+                credentials: "include",
+            }
+        );
 
         if (res.ok) {
             const data = await res.json();
@@ -84,13 +87,18 @@ export default function CartPage() {
                                 />
                                 <div>
                                     <h2 className="text-lg font-semibold">{item.title}</h2>
-                                    <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                                    <p className="text-sm text-gray-600">
+                                      Quantity: {item.quantity}
+                                      {item.size && (
+                                        <span className="ml-2 text-gray-500">| Size: {item.size}</span>
+                                      )}
+                                    </p>
                                 </div>
                             </Link>
                             <p>${(item.price * item.quantity).toFixed(2)}</p>
                             <button
-                                onClick={() => removeFromCart(item.productId)}
-                                className="text-red-600 font-medium hover:underline"
+                                onClick={() => removeFromCart(item.productId, item.size)}
+                                className="text-red-600 font-medium hover:underline cursor-pointer"
                             >
                                 Remove
                             </button>

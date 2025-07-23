@@ -49,15 +49,15 @@ const RelatedProducts = ({ currentProductId, currentCategory }) => {
 
 
 export default function ProductPage() {
-
-    function capitalize(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-    };
-
     const router = useRouter();
     const { id } = router.query;
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    // New state for cart
+    const [selectedSize, setSelectedSize] = useState('M');
+    const [quantity, setQuantity] = useState(1);
+    const [adding, setAdding] = useState(false);
 
     useEffect(() => {
         if (!id) return;
@@ -77,6 +77,34 @@ export default function ProductPage() {
 
     if (loading) return <p className='text-white text-3xl text-center p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen'>Loading...</p>
     if (!product) return <p className='text-white text-3xl text-center p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen'>Product not found</p>;
+
+    // Add to Cart handler
+    async function handleAddToCart() {
+        setAdding(true);
+        const body = {
+            productId: product.id,
+            quantity,
+        };
+        if (product.category.toLowerCase().includes('clothing')) {
+            body.size = selectedSize;
+        }
+        const res = await fetch('http://localhost:5000/cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify(body),
+        });
+        setAdding(false);
+        if (res.ok) {
+            alert('Added to cart!');
+        } else {
+            alert('Failed to add to cart');
+        }
+    }
+
+    function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+    };
 
     return (
         <>
@@ -112,7 +140,10 @@ export default function ProductPage() {
                                     {['S', 'M', 'L', 'XL'].map(size => (
                                         <button
                                             key={size}
-                                            className="px-3 py-1 border border-gray-400 rounded hover:bg-gray-800 hover:text-white transition"
+                                            type="button"
+                                            onClick={() => setSelectedSize(size)}
+                                            className={`px-3 py-1 border border-gray-400 rounded transition cursor-pointer
+                                                ${selectedSize === size ? 'bg-gray-800 text-white' : 'hover:bg-gray-800 hover:text-white'}`}
                                         >
                                             {size}
                                         </button>
@@ -122,10 +153,21 @@ export default function ProductPage() {
                         )}
                         <div className="flex items-center space-x-2 mb-4 gap-2">
                             <label htmlFor="qty" className="text-sm">Qty:</label>
-                            <input id="qty" type="number" min="1" defaultValue="1" className="w-16 p-1 rounded bg-white border text-black" />
+                            <input
+                                id="qty"
+                                type="number"
+                                min="1"
+                                value={quantity}
+                                onChange={e => setQuantity(Number(e.target.value))}
+                                className="w-16 p-1 rounded bg-white border text-black"
+                            />
                         </div>
-                        <button className="bg-emerald-600 hover:bg-emerald-700 transition-colors px-6 py-3 rounded-lg mt-4 text-white font-medium shadow-md cursor-pointer">
-                            Add to Cart
+                        <button
+                            className="bg-emerald-600 hover:bg-emerald-700 transition-colors px-6 py-3 rounded-lg mt-4 text-white font-medium shadow-md cursor-pointer"
+                            onClick={handleAddToCart}
+                            disabled={adding}
+                        >
+                            {adding ? "Adding..." : "Add to Cart"}
                         </button>
                     </div>
                 </div>

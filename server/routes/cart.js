@@ -27,16 +27,16 @@ router.get('/cart', async (req, res) => {
 
 router.post('/cart', async (req, res) => {
   const userId = getUserIdFromToken(req);
-  const { productId, quantity } = req.body;
+  const { productId, quantity, size } = req.body;
 
   if (!userId || !productId || !quantity) return res.status(400).json({ message: 'Missing data' });
 
   let cart = await Cart.findOne({ userId });
   if (!cart) cart = await Cart.create({ userId, items: [] });
 
-  const existingItem = cart.items.find(i => i.productId === productId);
+  const existingItem = cart.items.find(i => i.productId === productId && i.size === size);
   if (existingItem) existingItem.quantity += quantity;
-  else cart.items.push({ productId, quantity });
+  else cart.items.push({ productId, quantity, size });
 
   await cart.save();
   res.json(cart);
@@ -45,15 +45,16 @@ router.post('/cart', async (req, res) => {
 router.delete('/cart/:productId', async (req, res) => {
   const userId = getUserIdFromToken(req);
   const { productId } = req.params;
+  const { size } = req.query;
 
-  if (!userId) return res.status(401).json({ message: 'Not logged in' });
-
-  const cart = await Cart.findOne({ userId });
+  let cart = await Cart.findOne({ userId });
   if (!cart) return res.status(404).json({ message: 'Cart not found' });
 
-  cart.items = cart.items.filter(item => item.productId !== productId);
-  await cart.save();
+  cart.items = cart.items.filter(
+    item => !(item.productId === productId && item.size === size)
+  );
 
+  await cart.save();
   res.json(cart);
 });
 
