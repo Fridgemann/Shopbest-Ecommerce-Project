@@ -33,11 +33,13 @@ const Logout = ({ user, setUser }) => {
     try {
       const res = await fetch('http://localhost:5000/logout', {
         method: 'POST',
-        credentials: 'include', // make sure cookies are sent
+        credentials: 'include',
       });
 
       if (res.ok) {
-        setUser(null); // clear user state on success
+        setUser(null);
+        // Refresh the page to update logout state
+        router.refresh ? router.refresh() : window.location.reload();
       } else {
         console.error('Logout failed');
       }
