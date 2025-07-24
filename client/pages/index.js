@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from "@/store/useAppStore";
+import FeaturesSectionDemo from '../components/features-section-demo-2'; // Ensure this path is correct
 
 const Login = () => {
   const router = useRouter();
@@ -133,21 +134,12 @@ export default function LandingPage() {
       </section>
 
       {/* features */}
-      <section className="py-16 px-8 bg-gray-950 text-center">
-        <h2 className="text-2xl md:text-3xl font-bold mb-12">Why Shop With Us?</h2>
-        <div className="grid gap-10 md:grid-cols-4 sm:grid-cols-2">
-          {[
-            { title: 'Wide Variety', emoji: '🛍️' },
-            { title: 'Fast Shipping', emoji: '🚚' },
-            { title: 'Secure Checkout', emoji: '🔐' },
-            { title: '24/7 Support', emoji: '💬' },
-          ].map(({ title, emoji }) => (
-            <div key={title} className="bg-gray-900 p-6 rounded-lg shadow hover:bg-gray-800 transition">
-              <div className="text-4xl mb-4">{emoji}</div>
-              <h3 className="text-lg font-semibold">{title}</h3>
-            </div>
-          ))}
-        </div>
+
+      <section className="bg-black py-16 px-8">
+        <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center">
+          Why Shop With Us?
+        </h2>
+        <FeaturesSectionDemo className="mb-10 text-white" />
       </section>
 
       {/* category previews */}
