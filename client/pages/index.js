@@ -176,17 +176,20 @@ export default function LandingPage() {
         <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center">Featured Products</h2>
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           {featuredProducts.map(product => (
-            <div key={product.id} className="bg-gray-900 rounded-lg p-4 hover:bg-gray-800 transition">
-              <Image
-                src={product.image}
-                alt={product.title}
-                width={200}
-                height={200}
-                className="w-full h-48 object-contain mb-4"
-              ></Image>
-              <h3 className="text-white font-semibold mb-2">{product.title}</h3>
-              <p className="text-blue-400">${product.price}</p>
-            </div>
+            <Link
+              href={`/products/${product.id}`}>
+              <div key={product.id} className="bg-gray-900 rounded-lg p-4 hover:bg-gray-800 transition">
+                <Image
+                  src={product.image}
+                  alt={product.title}
+                  width={200}
+                  height={200}
+                  className="w-full h-48 object-contain mb-4"
+                ></Image>
+                <h3 className="text-white font-semibold mb-2">{product.title}</h3>
+                <p className="text-blue-400">${product.price}</p>
+              </div>
+            </Link>
           ))}
         </div>
       </section>
