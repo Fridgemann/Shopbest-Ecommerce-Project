@@ -112,17 +112,18 @@ export default function CartPage() {
             <h2 className="text-xl font-bold mt-8 text-right">
                 Total: ${total.toFixed(2)}
             </h2>
-            <div className="flex justify-end mt-6">
+            <div className="flex justify-end mt-6 gap-2">
+                {cart.length > 0 && (
+                    <button
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition cursor-pointer"
+                        onClick={() => router.push('/checkout')}
+                    >
+                        Proceed to Checkout
+                    </button>
+                )
+                }
                 <button
-                    className={`mt-2 ml-4 bg-blue-600 text-white px-4 py-2 rounded transition
-    ${cart.length === 0 ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700 cursor-pointer"}`}
-                    onClick={() => cart.length > 0 && router.push('/checkout')}
-                    disabled={cart.length === 0}
-                >
-                    Proceed to Checkout
-                </button>
-                <button
-                    className="mt-2 ml-4 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition cursor-pointer"
+                    className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition cursor-pointer"
                     onClick={() => router.push('/products')} // Go to products page
                 >
                     Continue Shopping
