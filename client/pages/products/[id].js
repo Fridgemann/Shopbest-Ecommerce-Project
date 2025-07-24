@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { getSlugFromCategoryName } from '@/lib/categoryMap';
+import { useAppStore } from "@/store/useAppStore";
 
 
 const RelatedProducts = ({ currentProductId, currentCategory }) => {
@@ -59,6 +60,8 @@ export default function ProductPage() {
     const [quantity, setQuantity] = useState(1);
     const [adding, setAdding] = useState(false);
 
+    const { refreshCartCount } = useAppStore();
+
     useEffect(() => {
         if (!id) return;
         const fetchProduct = async () => {
@@ -97,6 +100,7 @@ export default function ProductPage() {
         setAdding(false);
         if (res.ok) {
             alert('Added to cart!');
+            await refreshCartCount();
         } else {
             alert('Failed to add to cart');
         }

@@ -50,9 +50,15 @@ router.delete('/cart/:productId', async (req, res) => {
   let cart = await Cart.findOne({ userId });
   if (!cart) return res.status(404).json({ message: 'Cart not found' });
 
-  cart.items = cart.items.filter(
-    item => !(item.productId === productId && item.size === size)
-  );
+  cart.items = cart.items.filter(item => {
+    if (size !== undefined && size !== "") {
+      // Remove only if both productId and size match
+      return !(item.productId === productId && item.size === size);
+    } else {
+      // Remove if productId matches and item has no size
+      return !(item.productId === productId && (item.size === undefined || item.size === null || item.size === ""));
+    }
+  });
 
   await cart.save();
   res.json(cart);

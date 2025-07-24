@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAppStore } from '@/store/useAppStore';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [err, setErr] = useState('');
   const router = useRouter();
+  const { refreshUser } = useAppStore();
 
   async function handleLogin(e) {
     e.preventDefault();
@@ -22,6 +24,7 @@ export default function LoginPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || 'Login failed');
 
+      await refreshUser();
       router.push('/');
     } catch (err) {
       setErr(err.message);

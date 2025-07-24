@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router"; // Add this import
 import Link from "next/link";
+import { useAppStore } from "@/store/useAppStore";
 
 export default function CartPage() {
     const [cart, setCart] = useState([]);
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter(); // Initialize router
+    const { refreshCartCount } = useAppStore();
 
     useEffect(() => {
         async function fetchCartAndProducts() {
@@ -46,6 +48,7 @@ export default function CartPage() {
         if (res.ok) {
             const data = await res.json();
             setCart(data.items);
+            await refreshCartCount();
         }
     }
 
