@@ -13,6 +13,21 @@ router.get('/', async (req, res) => {
     }
 });
 
+router.get('/featured', async (req, res) => {
+    try {
+        const productsRes = await fetch('https://fakestoreapi.com/products');
+        const data = await productsRes.json();
+        // Sort by rating.rate descending and take top 4
+        const featuredProducts = data
+            .sort((a, b) => (b.rating?.rate || 0) - (a.rating?.rate || 0))
+            .slice(0, 4);
+        res.json(featuredProducts);
+    } catch (error) {
+        // console.error('Featured products error:', error); 
+        res.status(500).json({ error: 'Server error while fetching featured products' });
+    }
+});
+
 
 router.get('/:id', async (req, res) => {
     try {

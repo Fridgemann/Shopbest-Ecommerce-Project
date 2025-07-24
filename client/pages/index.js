@@ -61,14 +61,26 @@ const Logout = ({ user, setUser }) => {
 
 export default function LandingPage() {
   const [products, setProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
   const [user, setUser] = useState(null);
   const { refreshUser } = useAppStore();
+  const router = useRouter();
 
   useEffect(() => {
     fetch('http://localhost:5000/api/products')
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error('Failed to fetch products:', err));
+  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/products/featured')
+      .then(res => res.json())
+      .then(data => {
+        // console.log('Featured products:', data); // <-- Check what you get
+        setFeaturedProducts(Array.isArray(data) ? data : []);
+      })
+      .catch(err => console.error('Failed to fetch featured products:', err));
   }, []);
 
   useEffect(() => {
@@ -84,6 +96,11 @@ export default function LandingPage() {
   }, []);
 
   const handleLoginSuccess = async () => {
+    await refreshUser();
+    router.push("/");
+  };
+
+  const handleRegisterSuccess = async () => {
     await refreshUser();
     router.push("/");
   };
@@ -154,11 +171,11 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* featured products (plug in backend later) */}
+      { /* featured products section */}
       <section className="py-16 px-8 bg-gray-950">
         <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center">Featured Products</h2>
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
-          {products.map(product => (
+          {featuredProducts.map(product => (
             <div key={product.id} className="bg-gray-900 rounded-lg p-4 hover:bg-gray-800 transition">
               <Image
                 src={product.image}
