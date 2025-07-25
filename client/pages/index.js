@@ -65,6 +65,7 @@ export default function LandingPage() {
   const [products, setProducts] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [user, setUser] = useState(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { refreshUser } = useAppStore();
   const router = useRouter();
 
@@ -135,14 +136,60 @@ export default function LandingPage() {
         <div className="absolute right-0 top-0 px-8 py-6 z-20 flex items-center gap-4">
           {user ? (
             <>
-              <span className="text-xl text-blue-300 font-semibold mr-2">Hello, {user.username}!</span>
-              <button
-                onClick={() => router.push("/products")}
-                className="cursor-pointer bg-gradient-to-br from-blue-700 to-purple-700 px-6 py-3 rounded-lg font-semibold text-white hover:from-blue-800 hover:to-purple-800 transition shadow"
-              >
-                Shop Now
-              </button>
-              <Logout user={user} setUser={setUser} />
+              <div className="relative">
+                <button
+                  onClick={() => setUserMenuOpen(v => !v)}
+                  className="text-xl text-blue-300 font-semibold mr-2 bg-black/30 px-6 py-3 rounded-lg flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  aria-haspopup="true"
+                  aria-expanded={userMenuOpen}
+                >
+                  Hello, {user.username}!
+                  <svg
+                    className={`ml-2 w-4 h-4 transition-transform ${userMenuOpen ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {userMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-gray-900 border border-blue-700 rounded-lg shadow-lg z-50 flex flex-col py-2">
+                    <button
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        router.push("/products");
+                      }}
+                      className="px-6 py-3 text-white text-left hover:bg-blue-950 rounded-lg transition"
+                    >
+                      Shop Now
+                    </button>
+                    <button
+                      onClick={async () => {
+                        setUserMenuOpen(false);
+                        await (async () => {
+                          try {
+                            const res = await fetch('http://localhost:5000/logout', {
+                              method: 'POST',
+                              credentials: 'include',
+                            });
+                            if (res.ok) {
+                              setUser(null);
+                              router.refresh ? router.refresh() : window.location.reload();
+                            }
+                          } catch (err) {
+                            console.error('Error during logout:', err);
+                          }
+                        })();
+                      }}
+                      className="px-6 py-3 text-red-400 text-left hover:bg-blue-950 hover:text-red-300 rounded-lg transition"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
             <>
@@ -182,7 +229,17 @@ export default function LandingPage() {
                     draggable={false}
                     style={{ WebkitUserSelect: "none", userSelect: "none" }}
                   />
-                  <h3 className="text-white font-semibold mb-2 text-center line-clamp-2 h-12 flex items-center justify-center w-full">
+                  <h3
+                    className="text-white font-semibold mb-2 text-center h-12 flex items-center justify-center w-full text-base sm:text-lg break-words line-clamp-2"
+                    style={{
+                      display: "-webkit-box",
+                      WebkitLineClamp: 2,
+                      WebkitBoxOrient: "vertical",
+                      overflow: "hidden",
+                      wordBreak: "break-word",
+                      hyphens: "auto"
+                    }}
+                  >
                     {product.title}
                   </h3>
                   <div className="flex-1" />
