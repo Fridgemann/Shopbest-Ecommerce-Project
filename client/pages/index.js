@@ -153,7 +153,8 @@ export default function LandingPage() {
         </div>
         {/* Main headline */}
         <h1 className="relative z-10 mx-auto max-w-4xl text-center text-3xl md:text-5xl lg:text-7xl font-extrabold text-blue-400 drop-shadow mt-24">
-          Your One-Stop E-Commerce Destination
+          Your One-Stop Shop for Everything You Need
+          <span className="text-purple-400">.</span>
         </h1>
         {/* Subheadline */}
         <p className="relative z-10 mx-auto max-w-2xl py-4 text-center text-lg md:text-2xl font-normal text-neutral-300">
@@ -177,7 +178,7 @@ export default function LandingPage() {
                     alt={product.title}
                     width={128}
                     height={128}
-                    className="w-45 h-45 object-contain mb-4 rounded-lg bg-white/5 p-2 transition group-hover:scale-105"
+                    className="w-40 h-40 object-contain mb-4 rounded-lg bg-white/5 p-2 transition group-hover:scale-105"
                     draggable={false}
                     style={{ WebkitUserSelect: "none", userSelect: "none" }}
                   />

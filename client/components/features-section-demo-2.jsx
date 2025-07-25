@@ -1,61 +1,63 @@
 import { cn } from "@/lib/utils";
 import {
-  IconAdjustmentsBolt,
-  IconCloud,
+  IconTruckDelivery,
+  IconCreditCard,
   IconCurrencyDollar,
-  IconEaseInOut,
+  IconShieldCheck,
   IconHeart,
-  IconHelp,
-  IconRouteAltLeft,
-  IconTerminal2,
+  IconHeadset,
+  IconGift,
+  IconStar,
 } from "@tabler/icons-react";
 
 export default function FeaturesSectionDemo() {
   const features = [
     {
-      title: "Built for developers",
+      title: "Fast & Free Delivery",
       description:
-        "Built for engineers, developers, dreamers, thinkers and doers.",
-      icon: <IconTerminal2 />,
+        "Enjoy free shipping on all orders with lightning-fast delivery to your door.",
+      icon: <IconTruckDelivery />,
     },
     {
-      title: "Ease of use",
+      title: "Secure Payments",
       description:
-        "It's as easy as using an Apple, and as expensive as buying one.",
-      icon: <IconEaseInOut />,
+        "Your transactions are protected with industry-leading encryption and security.",
+      icon: <IconCreditCard />,
     },
     {
-      title: "Pricing like no other",
+      title: "Best Price Guarantee",
       description:
-        "Our prices are best in the market. No cap, no lock, no credit card required.",
+        "We offer the most competitive prices and exclusive deals every day.",
       icon: <IconCurrencyDollar />,
     },
     {
-      title: "100% Uptime guarantee",
-      description: "We just cannot be taken down by anyone.",
-      icon: <IconCloud />,
+      title: "Buyer Protection",
+      description:
+        "Shop with confidence—easy returns and full refunds if you're not satisfied.",
+      icon: <IconShieldCheck />,
     },
     {
-      title: "Multi-tenant Architecture",
-      description: "You can simply share passwords instead of buying new seats",
-      icon: <IconRouteAltLeft />,
+      title: "Curated Gift Ideas",
+      description:
+        "Find the perfect gift for every occasion with our handpicked selections.",
+      icon: <IconGift />,
     },
     {
       title: "24/7 Customer Support",
-      description:
-        "We are available a 100% of the time. Atleast our AI Agents are.",
-      icon: <IconHelp />,
+      description: "Our support team is always here to help you, day or night.",
+      icon: <IconHeadset />,
     },
     {
-      title: "Money back guarantee",
+      title: "Wishlist & Favorites",
       description:
-        "If you donot like EveryAI, we will convince you to like us.",
-      icon: <IconAdjustmentsBolt />,
-    },
-    {
-      title: "And everything else",
-      description: "I just ran out of copy ideas. Accept my sincere apologies",
+        "Save your favorite products and shop later with your personal wishlist.",
       icon: <IconHeart />,
+    },
+    {
+      title: "Top Rated Products",
+      description:
+        "Shop the most loved and highly rated products by our customers.",
+      icon: <IconStar />,
     },
   ];
   return (
