@@ -1,9 +1,8 @@
 // add popup notifications for success and error messages
 // redirect home after successful registration
 // auto login after registration
-
-"use client";
-import React, { useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -12,8 +11,11 @@ import {
   IconBrandX,
 } from "@tabler/icons-react";
 import { showToast } from "@/components/ui/toast";
+import { useAppStore } from '@/store/useAppStore';
 
 export default function SignupFormDemo() {
+  const router = useRouter();
+  const { refreshUser } = useAppStore();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -36,11 +38,16 @@ export default function SignupFormDemo() {
       const res = await fetch("http://localhost:5000/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // Include cookies for auth
         body: JSON.stringify(payload),
       });
       const data = await res.json();
       if (res.ok) {
         showToast("Registered successfully!", "success");
+        setTimeout(async () => {
+          await refreshUser();
+          router.push('/');
+        }, 1200); // Redirect after 1.2 seconds
       } else {
         showToast(data.error || "Registration failed.", "error");
       }

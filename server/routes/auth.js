@@ -13,7 +13,19 @@ router.post('/register', async (req, res) => {
   const hashed = await bcrypt.hash(password, 10);
   try {
     const user = new User({ username, email, password: hashed });
-    res.status(201).json(await user.save());
+    await user.save();
+
+    // Auto-login: create JWT and set cookie
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res
+      .cookie('token', token, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: false, // Set to true in production with HTTPS
+        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+      })
+      .status(201)
+      .json({ message: 'Registration successful', userId: user._id, username: user.username });
   } catch (err) {
     if (err.code === 11000) {
       return res.status(400).json({ error: "Username or email already in use." });
