@@ -88,9 +88,12 @@ export default function LandingPage() {
     fetch('http://localhost:5000/me', {
       credentials: 'include',
     })
-      .then(res => res.ok ? res.json() : null)
+      .then(res => {
+        if (res.status === 401) return null; // Not logged in
+        return res.ok ? res.json() : null;
+      })
       .then(data => {
-        if (data && data.userId) setUser(data);
+        if (data && data.loggedIn) setUser(data);
         else setUser(null);
       })
       .catch(() => setUser(null));
@@ -169,15 +172,17 @@ export default function LandingPage() {
         <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
           {featuredProducts.map(product => (
             <Link
-              href={`/products/${product.id}`}>
-              <div key={product.id} className="bg-gray-900 rounded-lg p-4 hover:bg-gray-800 transition">
+              key={product.id} // <-- Move key here!
+              href={`/products/${product.id}`}
+            >
+              <div className="bg-gray-900 rounded-lg p-4 hover:bg-gray-800 transition">
                 <Image
                   src={product.image}
                   alt={product.title}
                   width={200}
                   height={200}
                   className="w-full h-48 object-contain mb-4"
-                ></Image>
+                />
                 <h3 className="text-white font-semibold mb-2">{product.title}</h3>
                 <p className="text-blue-400">${product.price}</p>
               </div>

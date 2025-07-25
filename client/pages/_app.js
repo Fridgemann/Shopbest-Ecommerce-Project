@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import CartButton from "@/lib/cartButton";
 import { useEffect } from "react";
 import { useAppStore } from "@/store/useAppStore";
+import { ToastContainer } from "@/components/ui/toast";
 
 export default function App({ Component, pageProps }) {
   const { user, cartCount, refreshUser, refreshCartCount } = useAppStore();
@@ -18,6 +19,7 @@ export default function App({ Component, pageProps }) {
     <>
       <Component {...pageProps} />
       {user && <CartButton cartCount={cartCount} />}
+      <ToastContainer />
     </>
   );
 }

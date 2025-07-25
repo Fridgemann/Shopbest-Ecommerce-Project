@@ -8,12 +8,10 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import {
-  IconBrandGithub,
-  IconBrandGoogle,
   IconBrandInstagram,
-  IconBrandOnlyfans,
   IconBrandX,
 } from "@tabler/icons-react";
+import { showToast } from "@/components/ui/toast";
 
 export default function SignupFormDemo() {
   const [formData, setFormData] = useState({
@@ -29,8 +27,6 @@ export default function SignupFormDemo() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage("");
-    // You can combine firstname and lastname for username, or adjust as needed
     const payload = {
       username: formData.username,
       email: formData.email,
@@ -44,12 +40,12 @@ export default function SignupFormDemo() {
       });
       const data = await res.json();
       if (res.ok) {
-        setMessage("Registered successfully!");
+        showToast("Registered successfully!", "success");
       } else {
-        setMessage(data.error || "Registration failed.");
+        showToast(data.error || "Registration failed.", "error");
       }
     } catch (err) {
-      setMessage("Registration failed.");
+      showToast("Registration failed.", "error");
     }
   };
 
@@ -116,11 +112,6 @@ export default function SignupFormDemo() {
             <BottomGradient />
           </button>
 
-          {message && (
-            <div className="mt-4 text-center text-base text-green-400">
-              {message}
-            </div>
-          )}
 
           <div className="my-6 sm:my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-blue-700 to-transparent" />
 
