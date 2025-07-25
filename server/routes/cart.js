@@ -27,14 +27,17 @@ router.get('/cart', async (req, res) => {
 
 router.post('/cart', async (req, res) => {
   const userId = getUserIdFromToken(req);
-  const { productId, quantity, size } = req.body;
+  let { productId, quantity, size } = req.body;
 
   if (!userId || !productId || !quantity) return res.status(400).json({ message: 'Missing data' });
+
+  // Always treat productId as string for comparison and storage
+  productId = String(productId);
 
   let cart = await Cart.findOne({ userId });
   if (!cart) cart = await Cart.create({ userId, items: [] });
 
-  const existingItem = cart.items.find(i => i.productId === productId && i.size === size);
+  const existingItem = cart.items.find(i => String(i.productId) === productId && i.size === size);
   if (existingItem) existingItem.quantity += quantity;
   else cart.items.push({ productId, quantity, size });
 
@@ -53,10 +56,10 @@ router.delete('/cart/:productId', async (req, res) => {
   cart.items = cart.items.filter(item => {
     if (size !== undefined && size !== "") {
       // Remove only if both productId and size match
-      return !(item.productId === productId && item.size === size);
+      return !(String(item.productId) === String(productId) && item.size === size);
     } else {
       // Remove if productId matches and item has no size
-      return !(item.productId === productId && (item.size === undefined || item.size === null || item.size === ""));
+      return !(String(item.productId) === String(productId) && (item.size === undefined || item.size === null || item.size === ""));
     }
   });
 

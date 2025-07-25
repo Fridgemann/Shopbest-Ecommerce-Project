@@ -79,7 +79,7 @@ export default function CartPage() {
                 <ul className="space-y-6">
                     {cartWithDetails.map(item => (
                         <li
-                            key={item.productId}
+                            key={item.productId + (item.size || "")} // <-- Use both productId and size
                             className="flex gap-6 items-center border-b pb-4"
                         >
                             <Link href={`/products/${item.productId}`} className="flex items-center gap-4 flex-1 hover:underline">
