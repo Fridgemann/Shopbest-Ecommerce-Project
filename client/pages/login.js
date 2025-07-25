@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppStore } from '@/store/useAppStore';
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -32,31 +35,63 @@ export default function LoginPage() {
   }
 
   return (
-    <form
-      onSubmit={handleLogin}
-      className="flex flex-col gap-4 max-w-sm mx-auto mt-20"
-    >
-      <h2 className="text-2xl font-bold text-center">Login</h2>
-      <input
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        placeholder="Username"
-        className="p-2 border rounded"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-        className="p-2 border rounded"
-      />
-      {err && <p className="text-red-500">{err}</p>}
-      <button
-        type="submit"
-        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-      >
-        Login
-      </button>
-    </form>
+    <div className="min-h-screen flex items-center justify-center bg-black px-2">
+      <div className="w-full max-w-md rounded-lg bg-gray-900 p-4 sm:p-6 md:rounded-2xl md:shadow-input md:p-8 border border-blue-700">
+        <h2 className="text-2xl font-bold text-blue-400 text-center">
+          Login to <span className="text-purple-400">ShopBest</span>
+        </h2>
+        <form className="my-6 sm:my-8" onSubmit={handleLogin}>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="username" className="text-blue-300">
+              Username
+            </Label>
+            <Input
+              id="username"
+              placeholder="username123"
+              type="text"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
+              required
+              className="text-base py-3 px-3 bg-gray-800 text-white border border-blue-700 placeholder-gray-500 rounded-md"
+            />
+          </LabelInputContainer>
+          <LabelInputContainer className="mb-4">
+            <Label htmlFor="password" className="text-blue-300">
+              Password
+            </Label>
+            <Input
+              id="password"
+              placeholder="••••••••"
+              type="password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              required
+              className="text-base py-3 px-3 bg-gray-800 text-white border border-blue-700 placeholder-gray-500 rounded-md"
+            />
+          </LabelInputContainer>
+          {err && <p className="text-red-500 text-center mb-2">{err}</p>}
+          <button
+            type="submit"
+            className="group/btn relative block h-12 w-full rounded-md bg-gradient-to-br from-blue-700 to-purple-700 font-semibold text-white text-base shadow transition mt-2 cursor-pointer"
+          >
+            Login &rarr;
+            <BottomGradient />
+          </button>
+        </form>
+      </div>
+    </div>
   );
 }
+
+const BottomGradient = () => (
+  <>
+    <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+    <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+  </>
+);
+
+const LabelInputContainer = ({ children, className }) => (
+  <div className={cn("flex w-full flex-col space-y-2", className)}>
+    {children}
+  </div>
+);
