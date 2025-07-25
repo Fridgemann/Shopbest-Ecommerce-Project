@@ -200,7 +200,7 @@ export default function LandingPage() {
           <span className="text-purple-400">.</span>
         </h1>
         {/* Subheadline */}
-        <p className="relative z-10 mx-auto max-w-2xl py-4 text-center text-lg md:text-2xl font-normal text-neutral-300">
+        <p className="mb-10 relative z-10 mx-auto max-w-2xl py-4 text-center text-lg md:text-2xl font-normal text-neutral-300">
           Shop the latest trends, top brands, and unbeatable deals — all in one place.
         </p>
 
