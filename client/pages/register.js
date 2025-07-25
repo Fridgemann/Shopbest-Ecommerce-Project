@@ -10,7 +10,9 @@ import { cn } from "@/lib/utils";
 import {
   IconBrandGithub,
   IconBrandGoogle,
+  IconBrandInstagram,
   IconBrandOnlyfans,
+  IconBrandX,
 } from "@tabler/icons-react";
 
 export default function SignupFormDemo() {
@@ -107,7 +109,7 @@ export default function SignupFormDemo() {
           </LabelInputContainer>
 
           <button
-            className="group/btn relative block h-12 w-full rounded-md bg-gradient-to-br from-blue-700 to-purple-700 font-semibold text-white text-base shadow transition mt-2"
+            className="group/btn relative block h-12 w-full rounded-md bg-gradient-to-br from-blue-700 to-purple-700 font-semibold text-white text-base shadow transition mt-2 cursor-pointer"
             type="submit"
           >
             Sign up &rarr;
@@ -124,21 +126,21 @@ export default function SignupFormDemo() {
 
           <div className="flex flex-col space-y-3 sm:space-y-4">
             <button
-              className="group/btn shadow-input relative flex h-12 w-full items-center justify-center space-x-2 rounded-md bg-gray-800 px-4 font-medium text-blue-200 text-base border border-blue-700"
+              className="group/btn shadow-input relative flex h-12 w-full items-center justify-center space-x-2 rounded-md bg-gray-800 px-4 font-medium text-blue-200 text-base border border-blue-700 cursor-pointer"
               type="button"
               disabled
             >
-              <IconBrandGithub className="h-5 w-5 text-blue-400" />
-              <span className="text-base text-blue-300">GitHub (demo)</span>
+              <IconBrandInstagram className="h-5 w-5 text-blue-400" />
+              <span className="text-base text-blue-300">Our Instagram</span>
               <BottomGradient />
             </button>
             <button
-              className="group/btn shadow-input relative flex h-12 w-full items-center justify-center space-x-2 rounded-md bg-gray-800 px-4 font-medium text-blue-200 text-base border border-blue-700"
+              className="group/btn shadow-input relative flex h-12 w-full items-center justify-center space-x-2 rounded-md bg-gray-800 px-4 font-medium text-blue-200 text-base border border-blue-700 cursor-pointer"
               type="button"
               disabled
             >
-              <IconBrandGoogle className="h-5 w-5 text-blue-400" />
-              <span className="text-base text-blue-300">Google (demo)</span>
+              <IconBrandX className="h-5 w-5 text-blue-400" />
+              <span className="text-base text-blue-300">Our X / Twitter</span>
               <BottomGradient />
             </button>
           </div>
