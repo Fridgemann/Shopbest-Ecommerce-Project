@@ -125,33 +125,34 @@ export default function LandingPage() {
         <div className="absolute inset-x-0 bottom-0 h-px w-full bg-neutral-800/80 pointer-events-none">
           <div className="absolute mx-auto h-px w-40 bg-gradient-to-r from-transparent via-blue-500 to-transparent" />
         </div>
-        {/* Site Title */}
-        <div className="absolute left-0 top-0 px-8 py-6 z-20 flex items-center gap-3">
-          <div className="size-7 rounded-full bg-gradient-to-br from-blue-500 to-purple-500" />
-          <h1 className="text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 drop-shadow-lg tracking-tight">
-            Shop<span className='text-purple-400'>Best</span>.co
-          </h1>
-        </div>
-        {/* Auth Buttons & Greeting - Top Right */}
-        <div className="absolute right-0 top-0 px-8 py-6 z-20 flex items-center gap-4">
-          {user ? (
-            <>
+        {/* Site Title & Auth Buttons Header */}
+        <div className="absolute top-0 left-0 w-full flex justify-between items-center px-4 sm:px-8 py-4 sm:py-6 z-20">
+          {/* Site Title */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <div className="size-6 sm:size-7 rounded-full bg-gradient-to-br from-blue-500 to-purple-500" />
+            <h1 className="text-lg sm:text-2xl md:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 drop-shadow-lg tracking-tight whitespace-nowrap">
+              Shop<span className='text-purple-400'>Best</span>.co
+            </h1>
+          </div>
+          {/* Auth Buttons & Greeting - Top Right */}
+          <div className="flex items-center gap-2 sm:gap-4">
+            {user ? (
               <div className="relative">
                 <button
                   onClick={() => setUserMenuOpen(v => !v)}
-                  className="text-xl text-blue-300 font-semibold mr-2 bg-black/30 px-6 py-3 rounded-lg flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="text-lg sm:text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 drop-shadow-lg tracking-tight whitespace-nowrap bg-black/30 px-4 sm:px-6 py-2 sm:py-3 rounded-lg flex items-center gap-2 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                   aria-haspopup="true"
                   aria-expanded={userMenuOpen}
                 >
-                  Hello, {user.username}!
+                  <span className="truncate max-w-[120px] sm:max-w-none">Hello, {user.username}!</span>
                   <svg
-                    className={`ml-2 w-4 h-4 transition-transform ${userMenuOpen ? "rotate-180" : ""}`}
+                    className={`ml-2 w-5 h-5 text-blue-400 transition-transform duration-200 ${userMenuOpen ? "rotate-180" : ""}`}
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
                     viewBox="0 0 24 24"
                   >
-                    <path d="M19 9l-7 7-7-7" />
+                    <path d="M19 9l-7 7-7-7" stroke="currentColor" />
                   </svg>
                 </button>
                 {userMenuOpen && (
@@ -190,13 +191,8 @@ export default function LandingPage() {
                   </div>
                 )}
               </div>
-            </>
-          ) : (
-            <>
-              <Login />
-              <Register />
-            </>
-          )}
+            ) : null}
+          </div>
         </div>
         {/* Main headline */}
         <h1 className="relative z-10 mx-auto max-w-4xl text-center text-3xl md:text-5xl lg:text-7xl font-extrabold text-blue-400 drop-shadow mt-24">
@@ -207,6 +203,20 @@ export default function LandingPage() {
         <p className="relative z-10 mx-auto max-w-2xl py-4 text-center text-lg md:text-2xl font-normal text-neutral-300">
           Shop the latest trends, top brands, and unbeatable deals — all in one place.
         </p>
+
+        {/* Login & Register below subheadline */}
+        {!user && (
+          <div className="relative z-10 flex flex-col sm:flex-row justify-center items-center gap-20 mt-2 mb-8">
+            <div className="flex flex-col items-center">
+              <span className="text-blue-300 font-medium mb-5">Have an account?</span>
+              <Login />
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-blue-300 font-medium mb-5">Create an account and get shopping!</span>
+              <Register />
+            </div>
+          </div>
+        )}
 
         {/* featured products section */}
         <section className="py-16 px-8">
