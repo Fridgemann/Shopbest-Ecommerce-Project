@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { getSlugFromCategoryName } from '@/lib/categoryMap';
 import { useAppStore } from "@/store/useAppStore";
+import { showToast } from "@/components/ui/toast"; // Add this import at the top
 
 
 const RelatedProducts = ({ currentProductId, currentCategory }) => {
@@ -99,10 +100,10 @@ export default function ProductPage() {
         });
         setAdding(false);
         if (res.ok) {
-            alert('Added to cart!');
+            showToast("Added to cart!", "success"); // Toast for success
             await refreshCartCount();
         } else {
-            alert('Failed to add to cart');
+            showToast("Failed to add to cart", "error"); // Toast for error
         }
     }
 
