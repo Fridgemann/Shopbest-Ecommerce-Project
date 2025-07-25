@@ -1,6 +1,3 @@
-// add popup notifications for success and error messages
-// redirect home after successful registration
-// auto login after registration
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Label } from "@/components/ui/label";
