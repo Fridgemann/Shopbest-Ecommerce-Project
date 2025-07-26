@@ -76,8 +76,8 @@ router.get('/me', async (req, res) => {
     if (!user) {
       res.clearCookie('token', {
         httpOnly: true,
-        sameSite: 'Lax',
-        secure: false,
+        sameSite: 'lax',
+        secure: process.env.NODE_ENV === 'production',
       });
       return res.json({ loggedIn: false });
     }
@@ -86,8 +86,8 @@ router.get('/me', async (req, res) => {
   } catch (err) {
     res.clearCookie('token', {
       httpOnly: true,
-      sameSite: 'Lax',
-      secure: false,
+      sameSite: 'lax',
+      secure: process.env.NODE_ENV === 'production',
     });
     return res.json({ loggedIn: false });
   }
@@ -97,8 +97,8 @@ router.get('/me', async (req, res) => {
 router.post('/logout', (req, res) => {
   res.clearCookie('token', {
     httpOnly: true,
-    sameSite: 'Lax',
-    secure: false // true if you're using HTTPS
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production' // true if you're using HTTPS
   });
   res.json({ message: 'Logged out' });
 });
