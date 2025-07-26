@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router'; // Add this import
 import { getSlugFromCategoryName } from '@/lib/categoryMap';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
@@ -7,6 +8,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function Products() {
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('all');
+    const router = useRouter();
 
     useEffect(() => {
         fetch(`${API_URL}/api/products`)
@@ -14,6 +16,16 @@ export default function Products() {
             .then(data => setProducts(data))
             .catch(err => console.error('Failed to fetch products:', err));
     }, []);
+
+    // Set initial category from query param
+    useEffect(() => {
+        if (router.isReady) {
+            const cat = router.query.category;
+            if (cat && cat !== selectedCategory) {
+                setSelectedCategory(cat);
+            }
+        }
+    }, [router.isReady, router.query.category]);
 
     const categories = ['all', ...new Set(products.map(p => p.category))];
     const filteredProducts = selectedCategory === 'all'
