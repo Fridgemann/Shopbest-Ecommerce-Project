@@ -10,6 +10,8 @@ import {
 import { showToast } from "@/components/ui/toast";
 import { useAppStore } from '@/store/useAppStore';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function SignupFormDemo() {
   const router = useRouter();
   const { refreshUser } = useAppStore();
@@ -32,7 +34,7 @@ export default function SignupFormDemo() {
       password: formData.password,
     };
     try {
-      const res = await fetch("http://localhost:5000/register", {
+      const res = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include", // Include cookies for auth

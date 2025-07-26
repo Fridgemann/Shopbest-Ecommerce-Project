@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { useAppStore } from "@/store/useAppStore";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function CartPage() {
     const [cart, setCart] = useState([]);
     const [products, setProducts] = useState([]);
@@ -12,7 +14,7 @@ export default function CartPage() {
 
     useEffect(() => {
         async function fetchCartAndProducts() {
-            const cartRes = await fetch('http://localhost:5000/cart', {
+            const cartRes = await fetch(`${API_URL}/cart`, {
                 credentials: 'include'
             });
             if (cartRes.ok) {
@@ -22,7 +24,7 @@ export default function CartPage() {
                 setCart([]);
             }
 
-            const productsRes = await fetch('http://localhost:5000/api/products');
+            const productsRes = await fetch(`${API_URL}/api/products`);
             if (productsRes.ok) {
                 const productsData = await productsRes.json();
                 setProducts(productsData);
@@ -37,7 +39,7 @@ export default function CartPage() {
 
     async function removeFromCart(productId, size) {
         const res = await fetch(
-            `http://localhost:5000/cart/${productId}?size=${encodeURIComponent(size || "")}`,
+            `${API_URL}/cart/${productId}?size=${encodeURIComponent(size || "")}`,
             {
                 method: "DELETE",
                 credentials: "include",

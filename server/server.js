@@ -4,15 +4,17 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 require('dotenv').config();
 
 app.use(cors({
-  origin: 'http://localhost:3000', // your Next.js port
+  origin: process.env.CLIENT_ORIGIN,
   credentials: true,
 }));
 
 app.use(cookieParser());
 app.use(express.json());
+app.use(helmet());
 
 const PORT = process.env.PORT;
 

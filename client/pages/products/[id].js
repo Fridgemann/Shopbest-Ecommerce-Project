@@ -5,13 +5,15 @@ import { getSlugFromCategoryName } from '@/lib/categoryMap';
 import { useAppStore } from "@/store/useAppStore";
 import { showToast } from "@/components/ui/toast";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 const RelatedProducts = ({ currentProductId, currentCategory }) => {
     const [related, setRelated] = useState([]);
 
     useEffect(() => {
         const fetchRelated = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/products');
+                const res = await fetch(`${API_URL}/api/products`);
                 const data = await res.json();
 
                 const filtered = data
@@ -75,7 +77,7 @@ export default function ProductPage() {
         if (!id) return;
         const fetchProduct = async () => {
             try {
-                const res = await fetch(`http://localhost:5000/api/products/${id}`)
+                const res = await fetch(`${API_URL}/api/products/${id}`)
                 const data = await res.json();
                 setProduct(data);
             } catch (error) {
@@ -99,7 +101,7 @@ export default function ProductPage() {
         if (product.category.toLowerCase().includes('clothing')) {
             body.size = selectedSize;
         }
-        const res = await fetch('http://localhost:5000/cart', {
+        const res = await fetch(`${API_URL}/cart`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',

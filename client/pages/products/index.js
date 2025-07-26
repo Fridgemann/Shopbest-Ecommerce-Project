@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { getSlugFromCategoryName } from '@/lib/categoryMap';
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function Products() {
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('all');
 
     useEffect(() => {
-        fetch('http://localhost:5000/api/products') // change to your backend URL if deployed
+        fetch(`${API_URL}/api/products`)
             .then(res => res.json())
             .then(data => setProducts(data))
             .catch(err => console.error('Failed to fetch products:', err));

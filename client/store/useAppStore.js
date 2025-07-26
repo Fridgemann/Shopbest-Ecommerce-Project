@@ -1,5 +1,7 @@
 import { create } from "zustand";
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export const useAppStore = create((set) => ({
   user: null,
   cartCount: 0,
@@ -7,7 +9,7 @@ export const useAppStore = create((set) => ({
   setCartCount: (cartCount) => set({ cartCount }),
   refreshUser: async () => {
     try {
-      const res = await fetch("http://localhost:5000/me", { credentials: "include" });
+      const res = await fetch(`${API_URL}/me`, { credentials: "include" });
       const data = await res.json();
       set({ user: data && data.userId ? data : null });
     } catch {
@@ -16,7 +18,7 @@ export const useAppStore = create((set) => ({
   },
   refreshCartCount: async () => {
     try {
-      const res = await fetch("http://localhost:5000/cart", { credentials: "include" });
+      const res = await fetch(`${API_URL}/cart`, { credentials: "include" });
       const data = await res.json();
       set({ cartCount: data.items ? data.items.length : 0 });
     } catch {

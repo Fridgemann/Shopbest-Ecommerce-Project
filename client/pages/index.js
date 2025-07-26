@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAppStore } from "@/store/useAppStore";
 import FeaturesSectionDemo from '../components/features-section-demo-2'; // Ensure this path is correct
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 const Login = () => {
   const router = useRouter();
@@ -34,14 +35,13 @@ const Logout = ({ user, setUser }) => {
   const router = useRouter();
   async function handleLogout() {
     try {
-      const res = await fetch('http://localhost:5000/logout', {
+      const res = await fetch(`${API_URL}/logout`, {
         method: 'POST',
         credentials: 'include',
       });
 
       if (res.ok) {
         setUser(null);
-        // Refresh the page to update logout state
         router.refresh ? router.refresh() : window.location.reload();
       } else {
         console.error('Logout failed');
@@ -70,28 +70,27 @@ export default function LandingPage() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/products')
+    fetch(`${API_URL}/api/products`)
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error('Failed to fetch products:', err));
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/products/featured')
+    fetch(`${API_URL}/api/products/featured`)
       .then(res => res.json())
       .then(data => {
-        // console.log('Featured products:', data); // <-- Check what you get
         setFeaturedProducts(Array.isArray(data) ? data : []);
       })
       .catch(err => console.error('Failed to fetch featured products:', err));
   }, []);
 
   useEffect(() => {
-    fetch('http://localhost:5000/me', {
+    fetch(`${API_URL}/me`, {
       credentials: 'include',
     })
       .then(res => {
-        if (res.status === 401) return null; // Not logged in
+        if (res.status === 401) return null;
         return res.ok ? res.json() : null;
       })
       .then(data => {
@@ -171,7 +170,7 @@ export default function LandingPage() {
                         setUserMenuOpen(false);
                         await (async () => {
                           try {
-                            const res = await fetch('http://localhost:5000/logout', {
+                            const res = await fetch(`${API_URL}/logout`, {
                               method: 'POST',
                               credentials: 'include',
                             });
