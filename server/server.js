@@ -8,21 +8,7 @@ const helmet = require('helmet');
 require('dotenv').config();
 
 app.use(cors({
-  origin: (origin, callback) => {
-    const allowed = [
-      'https://shopbest-project.vercel.app',
-      /^https:\/\/shopbest-project-.*\.vercel\.app$/
-    ];
-    if (
-      allowed.some(o =>
-        typeof o === 'string' ? o === origin : o.test(origin)
-      )
-    ) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
+  origin: process.env.CLIENT_ORIGIN,
   credentials: true,
 }));
 
