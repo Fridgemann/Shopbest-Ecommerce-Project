@@ -127,6 +127,12 @@ Built as a hands-on project to learn full-stack integration and real-world produ
 
 Feel free to reach out via GitHub Issues or [LinkedIn](https://www.linkedin.com/in/emre-atasavun-125918303/) if you'd like to contribute, report bugs, or ask questions!
 
-```
+---
 
-Let me know if you want me to auto-generate the screenshots section or plug in your actual GitHub username/LinkedIn link.
+> ⚠️ **Note on Login and Mobile Browsers**
+>
+> Because this project uses secure, httpOnly cookies for authentication and the frontend (Vercel) and backend (Render) are on different domains, some mobile browsers (especially in-app browsers and Safari on iOS) may block login due to cross-site cookie restrictions. This is a browser security limitation, not a bug in the project.
+>
+> For best results, use Chrome or Firefox on desktop or mobile, and open the site in a regular browser (not inside apps like Instagram or Twitter).
+>
+> If you want perfect compatibility, you would need to deploy both frontend and backend under the same root domain (requires a custom domain).
