@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { getCategoryNameFromSlug } from '@/lib/categoryMap'
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+
 export default function CategoryPage() {
     const { query } = useRouter()
     const [products, setProducts] = useState([])
@@ -20,7 +22,7 @@ export default function CategoryPage() {
         }
         const fetchCategoryProducts = async () => {
             try {
-                const res = await fetch('http://localhost:5000/api/products') // update if needed
+                const res = await fetch(`${API_URL}/api/products`)
                 const data = await res.json()
                 const filtered = data.filter(
                     p => p.category.toLowerCase() === categoryName.toLowerCase()
