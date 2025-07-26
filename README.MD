@@ -125,7 +125,7 @@ Built as a hands-on project to learn full-stack integration and real-world produ
 
 ## 📬 Contact
 
-Feel free to reach out via GitHub Issues or [LinkedIn](https://linkedin.com/in/emre-atasavun) if you'd like to contribute, report bugs, or ask questions!
+Feel free to reach out via GitHub Issues or [LinkedIn](https://www.linkedin.com/in/emre-atasavun-125918303/) if you'd like to contribute, report bugs, or ask questions!
 
 ```
 
