@@ -126,7 +126,7 @@ export default function ProductPage() {
                 <nav className="text-sm text-gray-300 mb-4">
                     <Link href='/'><span className="hover:underline cursor-pointer text-white">Home</span></Link> /
                     <Link href='/products'><span className="hover:underline cursor-pointer ml-1 text-white">Products</span></Link> /
-                    <Link href={`/categories/${getSlugFromCategoryName(product.category)}`}>
+                    <Link href={`/products?category=${encodeURIComponent(product.category)}`}>
                         <span className="text-purple-400 ml-1 hover:underline">{capitalize(product.category)}</span>
                     </Link> /
                     <span className="text-blue-400 ml-1">{product.title}</span>
