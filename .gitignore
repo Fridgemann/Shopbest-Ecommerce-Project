@@ -6,22 +6,22 @@ node_modules/
 .env
 .env.*
 !.env.example
-client/.env.local
-client/.env.*
-!client/.env.example
+-client/.env.local
+-client/.env.*
+-!client/.env.example
 
 # Build output
 .next/
 out/
 dist/
 build/
-coverage/
 
 # Logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+*.log
 
 # OS files
 .DS_Store
@@ -31,7 +31,6 @@ Thumbs.db
 .vscode/
 
 # Misc
-*.log
 *.tgz
 
 # Ignore local database
