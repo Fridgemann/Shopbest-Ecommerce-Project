@@ -66,26 +66,31 @@ export default function LandingPage() {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [user, setUser] = useState(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const { refreshUser } = useAppStore();
+  const { refreshUser, setGlobalLoading } = useAppStore();
   const router = useRouter();
 
   useEffect(() => {
+    setGlobalLoading(true);
     fetch(`${API_URL}/api/products`)
       .then(res => res.json())
       .then(data => setProducts(data))
-      .catch(err => console.error('Failed to fetch products:', err));
+      .catch(err => console.error('Failed to fetch products:', err))
+      .finally(() => setGlobalLoading(false));
   }, []);
 
   useEffect(() => {
+    setGlobalLoading(true);
     fetch(`${API_URL}/api/products/featured`)
       .then(res => res.json())
       .then(data => {
         setFeaturedProducts(Array.isArray(data) ? data : []);
       })
-      .catch(err => console.error('Failed to fetch featured products:', err));
+      .catch(err => console.error('Failed to fetch featured products:', err))
+      .finally(() => setGlobalLoading(false));
   }, []);
 
   useEffect(() => {
+    setGlobalLoading(true);
     fetch(`${API_URL}/me`, {
       credentials: 'include',
     })
@@ -97,7 +102,8 @@ export default function LandingPage() {
         if (data && data.loggedIn) setUser(data);
         else setUser(null);
       })
-      .catch(() => setUser(null));
+      .catch(() => setUser(null))
+      .finally(() => setGlobalLoading(false));
   }, []);
 
   const handleLoginSuccess = async () => {

@@ -10,7 +10,7 @@ export default function CartPage() {
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const router = useRouter();
-    const { refreshCartCount } = useAppStore();
+    const { refreshCartCount, setGlobalLoading } = useAppStore();
 
     useEffect(() => {
         async function fetchCartAndProducts() {

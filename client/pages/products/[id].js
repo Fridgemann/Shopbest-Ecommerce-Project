@@ -71,9 +71,10 @@ export default function ProductPage() {
     const [quantity, setQuantity] = useState(1);
     const [adding, setAdding] = useState(false);
 
-    const { refreshCartCount } = useAppStore();
+    const { refreshCartCount, setGlobalLoading } = useAppStore();
 
     useEffect(() => {
+        setGlobalLoading(true);
         if (!id) return;
         const fetchProduct = async () => {
             try {
@@ -84,10 +85,11 @@ export default function ProductPage() {
                 console.error('Failed to fetch product: ', error);
             } finally {
                 setLoading(false);
+                setGlobalLoading(false);
             }
         }
         fetchProduct();
-    }, [id]);
+    }, [id, setGlobalLoading]);
 
     if (loading) return <p className='text-white text-3xl text-center p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen'>Loading...</p>
     if (!product) return <p className='text-white text-3xl text-center p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen'>Product not found</p>;

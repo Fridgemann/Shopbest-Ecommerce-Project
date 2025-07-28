@@ -5,8 +5,12 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export const useAppStore = create((set) => ({
   user: null,
   cartCount: 0,
+  globalLoading: false, // Add this
+
   setUser: (user) => set({ user }),
   setCartCount: (cartCount) => set({ cartCount }),
+  setGlobalLoading: (loading) => set({ globalLoading: loading }),
+
   refreshUser: async () => {
     try {
       const res = await fetch(`${API_URL}/me`, { credentials: "include" });
