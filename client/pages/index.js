@@ -270,14 +270,14 @@ export default function LandingPage() {
           <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center text-blue-400">Browse by Category</h2>
           <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
             {[
-              { name: "Men's Clothing", slug: 'men' },
-              { name: "Women's Clothing", slug: 'women' },
-              { name: 'Electronics', slug: 'electronics' },
-              { name: 'Jewelry', slug: 'jewelery' },
-            ].map(({ name, slug }) => (
+              { name: "Men's Clothing", category: "men's clothing" },
+              { name: "Women's Clothing", category: "women's clothing" },
+              { name: 'Electronics', category: 'electronics' },
+              { name: 'Jewelry', category: 'jewelery' },
+            ].map(({ name, category }) => (
               <Link
-                key={slug}
-                href={`/categories/${slug}`}
+                key={category}
+                href={`/products?category=${encodeURIComponent(category)}`}
                 className="bg-gray-900 hover:bg-gradient-to-br hover:from-blue-700 hover:to-purple-700 p-6 rounded-lg text-center transition border border-blue-700 shadow"
               >
                 <p className="text-lg font-semibold text-white">{name}</p>
