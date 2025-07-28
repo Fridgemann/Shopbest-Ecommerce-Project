@@ -14,6 +14,7 @@ export default function CartPage() {
 
     useEffect(() => {
         async function fetchCartAndProducts() {
+            setGlobalLoading(true); // <--- Start global loading
             const cartRes = await fetch(`${API_URL}/cart`, {
                 credentials: 'include'
             });
@@ -33,9 +34,10 @@ export default function CartPage() {
             }
 
             setLoading(false);
+            setGlobalLoading(false); // <--- Stop global loading
         }
         fetchCartAndProducts();
-    }, []);
+    }, [setGlobalLoading]);
 
     async function removeFromCart(productId, size) {
         const res = await fetch(

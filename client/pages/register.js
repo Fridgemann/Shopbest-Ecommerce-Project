@@ -14,7 +14,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function SignupFormDemo() {
   const router = useRouter();
-  const { refreshUser } = useAppStore();
+  const { refreshUser, setGlobalLoading } = useAppStore();
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -28,6 +28,7 @@ export default function SignupFormDemo() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setGlobalLoading(true);
     const payload = {
       username: formData.username,
       email: formData.email,
@@ -52,6 +53,8 @@ export default function SignupFormDemo() {
       }
     } catch (err) {
       showToast("Registration failed.", "error");
+    } finally {
+      setGlobalLoading(false);
     }
   };
 

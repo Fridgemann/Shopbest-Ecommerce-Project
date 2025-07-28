@@ -12,11 +12,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [err, setErr] = useState('');
   const router = useRouter();
-  const { refreshUser } = useAppStore();
+  const { refreshUser, setGlobalLoading } = useAppStore();
 
-  async function handleLogin(e) {
+  const handleLogin = async (e) => {
     e.preventDefault();
     setErr('');
+    setGlobalLoading(true);
 
     try {
       const res = await fetch(`${API_URL}/login`, {
@@ -33,6 +34,8 @@ export default function LoginPage() {
       router.push('/');
     } catch (err) {
       setErr(err.message);
+    } finally {
+      setGlobalLoading(false);
     }
   }
 

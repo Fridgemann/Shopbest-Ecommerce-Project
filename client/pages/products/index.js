@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router'; // Add this import
 import { getSlugFromCategoryName } from '@/lib/categoryMap';
+import { useAppStore } from "@/store/useAppStore";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -9,13 +10,16 @@ export default function Products() {
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const router = useRouter();
+    const { setGlobalLoading } = useAppStore();
 
     useEffect(() => {
+        setGlobalLoading(true);
         fetch(`${API_URL}/api/products`)
             .then(res => res.json())
             .then(data => setProducts(data))
-            .catch(err => console.error('Failed to fetch products:', err));
-    }, []);
+            .catch(err => console.error('Failed to fetch products:', err))
+            .finally(() => setGlobalLoading(false));
+    }, [setGlobalLoading]);
 
     // Set initial category from query param
     useEffect(() => {
