@@ -18,6 +18,10 @@ app.use(helmet());
 
 const PORT = process.env.PORT;
 
+app.get('/', (req, res) => {
+  res.status(200).send('OK');
+});
+
 const productsRouter = require('./routes/products')
 app.use('/api/products', productsRouter);
 
