@@ -27,9 +27,9 @@ router.get('/cart', async (req, res) => {
 
 router.post('/cart', async (req, res) => {
   const userId = getUserIdFromToken(req);
-  let { productId, quantity, size } = req.body;
+  let { productId, quantity, size, price, name, image } = req.body;
 
-  if (!userId || !productId || !quantity) return res.status(400).json({ message: 'Missing data' });
+  if (!userId || !productId || !quantity || !price || !name || !image) return res.status(400).json({ message: 'Missing data' });
 
   // Always treat productId as string for comparison and storage
   productId = String(productId);
@@ -39,7 +39,7 @@ router.post('/cart', async (req, res) => {
 
   const existingItem = cart.items.find(i => String(i.productId) === productId && i.size === size);
   if (existingItem) existingItem.quantity += quantity;
-  else cart.items.push({ productId, quantity, size });
+  else cart.items.push({ productId, quantity, size, price, name, image });
 
   await cart.save();
   res.json(cart);

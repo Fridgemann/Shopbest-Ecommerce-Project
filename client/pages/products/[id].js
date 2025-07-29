@@ -118,6 +118,9 @@ export default function ProductPage() {
         const body = {
             productId: product.id,
             quantity,
+            price: product.price,
+            name: product.title,      // <-- Add this
+            image: product.image,     // <-- Add this
         };
         if (product.category.toLowerCase().includes('clothing')) {
             body.size = selectedSize;
