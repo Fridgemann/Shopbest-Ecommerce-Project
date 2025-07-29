@@ -8,7 +8,8 @@ const wishlistSchema = new mongoose.Schema({
     },
     items: [{
         productId: String,
+        // No size, price, or quantity
     }],
-})
+});
 
 module.exports = mongoose.model('Wishlist', wishlistSchema);
