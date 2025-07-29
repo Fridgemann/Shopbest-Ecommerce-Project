@@ -6,10 +6,13 @@ export const useAppStore = create((set) => ({
   user: null,
   cartCount: 0,
   globalLoading: false, // Add this
+  wishlistItems: [],
+  wishlistCount: 0,
 
   setUser: (user) => set({ user }),
   setCartCount: (cartCount) => set({ cartCount }),
   setGlobalLoading: (loading) => set({ globalLoading: loading }),
+  setWishlistItems: (items) => set({ wishlistItems: items, wishlistCount: items.length }),
 
   refreshUser: async () => {
     try {
@@ -27,6 +30,19 @@ export const useAppStore = create((set) => ({
       set({ cartCount: data.items ? data.items.length : 0 });
     } catch {
       set({ cartCount: 0 });
+    }
+  },
+  refreshWishlist: async () => {
+    try {
+      const res = await fetch(`${API_URL}/wishlist`, { credentials: "include" });
+      const data = await res.json();
+      // If your API returns { items: [...] }
+      set({
+        wishlistItems: data.items || [],
+        wishlistCount: data.items ? data.items.length : 0,
+      });
+    } catch {
+      set({ wishlistItems: [], wishlistCount: 0 });
     }
   },
 }));
