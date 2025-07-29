@@ -261,7 +261,8 @@ export default function LandingPage() {
                       WebkitBoxOrient: "vertical",
                       overflow: "hidden",
                       wordBreak: "break-word",
-                      hyphens: "auto"
+                      hyphens: "auto",
+                      textOverflow: "ellipsis"
                     }}
                   >
                     {product.title}

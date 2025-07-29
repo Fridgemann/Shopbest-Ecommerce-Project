@@ -81,7 +81,17 @@ export default function WishlistPage() {
                                         style={{ WebkitUserSelect: "none", userSelect: "none" }}
                                     />
                                 </div>
-                                <h3 className="text-white font-semibold mb-2 text-center h-12 flex items-center justify-center w-full text-base break-words line-clamp-2">
+                                <h3 className="text-white font-semibold mb-2 text-center h-12 flex items-center justify-center w-full text-base break-words line-clamp-2"
+                                    style={{
+                                        display: "-webkit-box",
+                                        WebkitLineClamp: 2,
+                                        WebkitBoxOrient: "vertical",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        wordBreak: "break-word",
+                                        hyphens: "auto"
+                                    }}
+                                >
                                     {item.title}
                                 </h3>
                             </Link>
