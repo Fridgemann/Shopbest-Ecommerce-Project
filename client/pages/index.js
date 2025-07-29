@@ -172,6 +172,15 @@ export default function LandingPage() {
                       Shop Now
                     </button>
                     <button
+                      onClick={() => {
+                        setUserMenuOpen(false);
+                        router.push('/wishlist');
+                      }}
+                      className="px-6 py-3 text-white text-left hover:bg-blue-950 rounded-lg transition"
+                    >
+                        Wishlist
+                    </button>
+                    <button
                       onClick={async () => {
                         setUserMenuOpen(false);
                         await (async () => {
