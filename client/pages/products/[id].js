@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { getSlugFromCategoryName } from '@/lib/categoryMap';
 import { useAppStore } from "@/store/useAppStore";
 import { showToast } from "@/components/ui/toast";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -70,6 +71,8 @@ export default function ProductPage() {
     const [selectedSize, setSelectedSize] = useState('M');
     const [quantity, setQuantity] = useState(1);
     const [adding, setAdding] = useState(false);
+    const [wishlistLoading, setWishlistLoading] = useState(false);
+    const [inWishlist, setInWishlist] = useState(false);
 
     const { refreshCartCount, setGlobalLoading } = useAppStore();
 
@@ -91,8 +94,24 @@ export default function ProductPage() {
         fetchProduct();
     }, [id, setGlobalLoading]);
 
-    if (loading) return <p className='text-white text-3xl text-center p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen'>Loading...</p>
-    if (!product) return <p className='text-white text-3xl text-center p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen'>Product not found</p>;
+    // Check if product is in wishlist (you may need to fetch user's wishlist here)
+    useEffect(() => {
+        async function checkWishlist() {
+            if (!product) return;
+            try {
+                const res = await fetch(`${API_URL}/wishlist`, { credentials: "include" });
+                const data = await res.json();
+                if (data && data.items && data.items.some(item => item.productId === String(product.id))) {
+                    setInWishlist(true);
+                } else {
+                    setInWishlist(false);
+                }
+            } catch {
+                setInWishlist(false);
+            }
+        }
+        checkWishlist();
+    }, [product]);
 
     async function handleAddToCart() {
         setAdding(true);
@@ -118,9 +137,51 @@ export default function ProductPage() {
         }
     }
 
+    async function handleAddToWishlist() {
+        setWishlistLoading(true);
+        const body = { productId: product.id };
+        const res = await fetch(`${API_URL}/wishlist`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json'},
+            credentials: 'include',
+            body: JSON.stringify(body),
+        });
+        setWishlistLoading(false);
+        if (res.ok) {
+            showToast("Added to wishlist!", "success");
+        } else {
+            showToast("Failed to add to wishlist", "error");
+        }
+    }
+
+    async function handleWishlistToggle() {
+        setWishlistLoading(true);
+        if (inWishlist) {
+            await fetch(`${API_URL}/wishlist/${product.id}`, {
+                method: "DELETE",
+                credentials: "include"
+            });
+            setInWishlist(false);
+            showToast("Removed from wishlist!", "info");
+        } else {
+            await fetch(`${API_URL}/wishlist`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ productId: product.id })
+            });
+            setInWishlist(true);
+            showToast("Added to wishlist!", "success");
+        }
+        setWishlistLoading(false);
+    }
+
     function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
     };
+
+    if (loading) return <p className='text-white text-3xl text-center p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen'>Loading...</p>
+    if (!product) return <p className='text-white text-3xl text-center p-8 bg-gradient-to-b from-gray-900 to-black min-h-screen'>Product not found</p>;
 
     return (
         <div className="min-h-screen bg-black">
@@ -167,7 +228,7 @@ export default function ProductPage() {
                                 </div>
                             </div>
                         )}
-                        <div className="flex items-center space-x-2 mb-4 gap-2">
+                        <div className="flex items-center gap-2 mb-4">
                             <label htmlFor="qty" className="text-sm text-gray-300">Qty:</label>
                             <input
                                 id="qty"
@@ -177,6 +238,25 @@ export default function ProductPage() {
                                 onChange={e => setQuantity(Number(e.target.value))}
                                 className="w-16 p-1 rounded bg-gray-800 border border-blue-700 text-white"
                             />
+                        </div>
+                        <div className="flex items-center gap-2">
+                            {/* Heart icon wishlist button */}
+                            <button
+                                onClick={handleWishlistToggle}
+                                disabled={wishlistLoading}
+                                aria-label={inWishlist ? "Remove from wishlist" : "Add to wishlist"}
+                                className={`p-3 rounded-full transition
+                                    bg-gray-700 text-gray-300 hover:bg-gray-600
+                                    shadow-lg focus:outline-none`}
+                            >
+                                {inWishlist
+                                    ? <FaHeart className="w-6 h-6" style={{ color: "#ef4444" }} />
+                                    : <FaRegHeart className="w-6 h-6" style={{ color: "#d1d5db" }} />
+                                }
+                            </button>
+                            <span className="text-sm text-gray-300">
+                                {inWishlist ? "In Wishlist" : "Add to Wishlist"}
+                            </span>
                         </div>
                         <button
                             className="group/btn relative block h-12 w-full rounded-md bg-gradient-to-br from-blue-700 to-purple-700 font-semibold text-white text-base shadow transition mt-2 cursor-pointer"
