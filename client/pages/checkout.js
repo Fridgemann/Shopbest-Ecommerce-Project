@@ -9,6 +9,7 @@ async function handleCheckout(cartItems) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ cartItems }),
+    credentials: "include",
   });
   const data = await res.json();
   console.log("Stripe session response:", data); // Add this

@@ -5,6 +5,7 @@ const cors = require('cors');
 const app = express();
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
+const bodyParser = require('body-parser');
 require('dotenv').config();
 
 app.use(cors({
@@ -12,9 +13,16 @@ app.use(cors({
   credentials: true,
 }));
 
+const { webhookHandler } = require('./routes/checkout');
+app.post('/webhook', bodyParser.raw({ type: 'application/json' }), webhookHandler);
+
+app.use(helmet({
+  contentSecurityPolicy: false, // disabled csp for simplicity for now
+}));
 app.use(cookieParser());
+
+
 app.use(express.json());
-app.use(helmet());
 
 const PORT = process.env.PORT;
 

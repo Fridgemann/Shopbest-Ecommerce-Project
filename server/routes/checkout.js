@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const Stripe = require('stripe');
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+const bodyParser = require('body-parser');
+const Cart = require('../models/Cart');
+const authenticateJWT = require('../middleware/authenticateJWT');
 
-router.post('/create-checkout-session', async (req, res) => {
+router.post('/create-checkout-session', authenticateJWT, async (req, res) => {
   const { cartItems } = req.body;
   //   console.log("cartItems:", cartItems); // Debug
 
@@ -26,7 +29,7 @@ router.post('/create-checkout-session', async (req, res) => {
       success_url: `${process.env.CLIENT_ORIGIN}/success`,
       cancel_url: `${process.env.CLIENT_ORIGIN}/cancel`,
       metadata: {
-        cartItems: JSON.stringify(cartItems),
+        userId: req.userId
       },
     });
     res.json({ sessionId: session.id });
@@ -36,4 +39,36 @@ router.post('/create-checkout-session', async (req, res) => {
   }
 });
 
+router.use(bodyParser.json());
+
+// Export webhook handler separately
+const webhookRawMiddleware = bodyParser.raw({ type: 'application/json' });
+
+const webhookHandler = async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+
+    if (event.type === 'checkout.session.completed') {
+      const session = event.data.object;
+      const userId = session.metadata?.userId;
+      if (userId) {
+        await Cart.findOneAndUpdate({ userId }, { items: [] });
+        console.log(`Cart cleared for user ${userId}`);
+      } else {
+        console.warn('No userId in session metadata, cart not cleared.');
+      }
+    }
+
+    res.status(200).send('Webhook received');
+  } catch (err) {
+    console.error('Stripe webhook error:', err.message);
+    res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+};
+
 module.exports = router;
+module.exports.webhookHandler = webhookHandler;
+module.exports.webhookRawMiddleware = webhookRawMiddleware;
