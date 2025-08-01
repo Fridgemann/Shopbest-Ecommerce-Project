@@ -27,8 +27,8 @@ router.post('/create-checkout-session', authenticateJWT, async (req, res) => {
         },
         quantity: item.quantity,
       })),
-      success_url: `${process.env.CLIENT_ORIGIN}/success`,
-      cancel_url: `${process.env.CLIENT_ORIGIN}/cancel`,
+      success_url: `${process.env.CLIENT_ORIGIN}/payment-res/success`,
+      cancel_url: `${process.env.CLIENT_ORIGIN}/payment-res/cancel`,
       metadata: {
         userId: req.userId
       },
