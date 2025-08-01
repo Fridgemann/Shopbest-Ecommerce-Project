@@ -106,16 +106,6 @@ export default function LandingPage() {
       .finally(() => setGlobalLoading(false));
   }, []);
 
-  const handleLoginSuccess = async () => {
-    await refreshUser();
-    router.push("/");
-  };
-
-  const handleRegisterSuccess = async () => {
-    await refreshUser();
-    router.push("/");
-  };
-
   return (
     <div className="bg-black text-white">
       {/* hero section */}
