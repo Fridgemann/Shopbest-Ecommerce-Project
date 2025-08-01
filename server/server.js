@@ -45,6 +45,9 @@ app.use('/', wishlistRoutes);
 const checkoutRoutes = require('./routes/checkout');
 app.use('/', checkoutRoutes);
 
+const ordersRouter = require('./routes/orders');
+app.use('/', ordersRouter);
+
 
 
 mongoose.connect(process.env.MONGO_URI)

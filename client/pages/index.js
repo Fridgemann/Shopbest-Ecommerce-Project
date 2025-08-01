@@ -174,11 +174,21 @@ export default function LandingPage() {
                     <button
                       onClick={() => {
                         setUserMenuOpen(false);
+                        router.push('/orders');
+                      }}
+                      className="px-6 py-3 text-white text-left hover:bg-blue-950
+                      rounded-lg transition"
+                    >
+                      Order History
+                    </button>
+                    <button
+                      onClick={() => {
+                        setUserMenuOpen(false);
                         router.push('/wishlist');
                       }}
                       className="px-6 py-3 text-white text-left hover:bg-blue-950 rounded-lg transition"
                     >
-                        Wishlist
+                      Wishlist
                     </button>
                     <button
                       onClick={async () => {
