@@ -12,7 +12,7 @@ async function handleCheckout(cartItems) {
     credentials: "include",
   });
   const data = await res.json();
-  console.log("Stripe session response:", data); // Add this
+  // console.log("Stripe session response:", data); // Add this
   const stripe = await stripePromise;
   stripe.redirectToCheckout({ sessionId: data.sessionId });
 }

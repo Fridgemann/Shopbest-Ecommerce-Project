@@ -9,7 +9,7 @@ const authenticateJWT = require('../middleware/authenticateJWT');
 
 router.post('/create-checkout-session', authenticateJWT, async (req, res) => {
   const { cartItems } = req.body;
-  console.log("cartItems:", cartItems); // Debug
+  // console.log("cartItems:", cartItems); // Debug
 
   try {
 
