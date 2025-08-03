@@ -17,18 +17,24 @@ export default function CheckoutPage() {
   async function handleCheckout(cartItems, name, address) {
     setGlobalLoading(true);
     setLoading(true);
-    const res = await fetch(`${API_URL}/create-checkout-session`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cartItems, name, address }),
-      credentials: "include",
-    });
-    const data = await res.json();
-    // console.log("Stripe session response:", data); // Add this
-    const stripe = await stripePromise;
-    stripe.redirectToCheckout({ sessionId: data.sessionId });
-    setGlobalLoading(false);
-    setLoading(false);
+    try {
+      const res = await fetch(`${API_URL}/create-checkout-session`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cartItems, name, address }),
+        credentials: "include",
+      });
+      const data = await res.json();
+      // console.log("Stripe session response:", data); // Debug
+      const stripe = await stripePromise;
+      stripe.redirectToCheckout({ sessionId: data.sessionId });
+    } catch (error) {
+      console.error("Error during checkout:", error);
+      alert("An error occurred during checkout. Please try again.");
+    } finally {
+      setGlobalLoading(false);
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
