@@ -12,9 +12,11 @@ export default function CheckoutPage() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const { setGlobalLoading } = useAppStore();
+  const [loading, setLoading] = useState(false);
 
   async function handleCheckout(cartItems, name, address) {
     setGlobalLoading(true);
+    setLoading(true);
     const res = await fetch(`${API_URL}/create-checkout-session`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -25,6 +27,8 @@ export default function CheckoutPage() {
     // console.log("Stripe session response:", data); // Add this
     const stripe = await stripePromise;
     stripe.redirectToCheckout({ sessionId: data.sessionId });
+    setGlobalLoading(false);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -85,8 +89,9 @@ export default function CheckoutPage() {
             }}
             type="submit"
             className="w-full bg-gradient-to-br from-blue-700 to-purple-700 text-white py-3 rounded-lg font-semibold hover:from-blue-800 hover:to-purple-800 transition shadow mt-4"
+            disabled={!name || !address || cartItems.length === 0 || loading}
           >
-            Proceed to Payment
+            {loading ? "Processing..." : "Proceed to Payment"}
           </button>
         </form>
         <div className="text-center mt-8">
