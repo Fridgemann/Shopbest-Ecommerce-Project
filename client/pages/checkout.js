@@ -1,26 +1,31 @@
 import Link from "next/link";
 import { loadStripe } from "@stripe/stripe-js";
 import { useEffect, useState } from "react";
+import { useAppStore } from "@/store/useAppStore";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-
-async function handleCheckout(cartItems) {
-  const res = await fetch(`${API_URL}/create-checkout-session`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ cartItems }),
-    credentials: "include",
-  });
-  const data = await res.json();
-  // console.log("Stripe session response:", data); // Add this
-  const stripe = await stripePromise;
-  stripe.redirectToCheckout({ sessionId: data.sessionId });
-}
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function CheckoutPage() {
   const [cartItems, setCartItems] = useState([]);
+  const [name, setName] = useState("");
+  const [address, setAddress] = useState("");
+  const { setGlobalLoading } = useAppStore();
+
+  async function handleCheckout(cartItems, name, address) {
+    setGlobalLoading(true);
+    const res = await fetch(`${API_URL}/create-checkout-session`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ cartItems, name, address }),
+      credentials: "include",
+    });
+    const data = await res.json();
+    // console.log("Stripe session response:", data); // Add this
+    const stripe = await stripePromise;
+    stripe.redirectToCheckout({ sessionId: data.sessionId });
+  }
 
   useEffect(() => {
     async function fetchCart() {
@@ -51,6 +56,8 @@ export default function CheckoutPage() {
               className="w-full border border-blue-700 bg-black/40 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               placeholder="Your Name"
               required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </div>
           <div>
@@ -62,6 +69,8 @@ export default function CheckoutPage() {
               className="w-full border border-blue-700 bg-black/40 text-white px-4 py-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
               placeholder="123 Main St, City, Country"
               required
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
             />
           </div>
           {/* Stripe handles card details, so remove card fields */}
@@ -69,7 +78,7 @@ export default function CheckoutPage() {
             onClick={async (e) => {
               e.preventDefault();
               if (cartItems.length > 0) {
-                await handleCheckout(cartItems);
+                await handleCheckout(cartItems, name, address);
               } else {
                 alert("Your cart is empty!");
               }

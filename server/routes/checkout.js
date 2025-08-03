@@ -8,7 +8,7 @@ const Order = require('../models/Order'); // Add at the top
 const authenticateJWT = require('../middleware/authenticateJWT');
 
 router.post('/create-checkout-session', authenticateJWT, async (req, res) => {
-  const { cartItems } = req.body;
+  const { cartItems, name, address } = req.body;
   // console.log("cartItems:", cartItems); // Debug
 
   try {
@@ -30,7 +30,9 @@ router.post('/create-checkout-session', authenticateJWT, async (req, res) => {
       success_url: `${process.env.CLIENT_ORIGIN}/payment-res/success`,
       cancel_url: `${process.env.CLIENT_ORIGIN}/payment-res/cancel`,
       metadata: {
-        userId: req.userId
+        userId: req.userId,
+        name,
+        address
       },
     });
     res.json({ sessionId: session.id });
@@ -63,7 +65,7 @@ const webhookHandler = async (req, res) => {
         const total = session.amount_total / 100;
 
         if (items.length) {
-          await Order.create({ userId, items, total });
+          await Order.create({ userId, items, total, name: session.metadata?.name, address: session.metadata?.address });
           await Cart.findOneAndUpdate({ userId }, { items: [] });
           console.log(`Order saved and cart cleared for user ${userId}`);
         } else {
