@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const Cart = require('../models/Cart');
 const Order = require('../models/Order'); // Add at the top
 const authenticateJWT = require('../middleware/authenticateJWT');
+const nodemailer = require('nodemailer');
 
 router.post('/create-checkout-session', authenticateJWT, async (req, res) => {
   const { cartItems, name, address } = req.body;
@@ -57,6 +58,7 @@ const webhookHandler = async (req, res) => {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
       const userId = session.metadata?.userId;
+      const email = session.customer_details?.email || session.metadata?.email;
 
       if (userId) {
         // Fetch the cart before clearing
@@ -65,7 +67,42 @@ const webhookHandler = async (req, res) => {
         const total = session.amount_total / 100;
 
         if (items.length) {
-          await Order.create({ userId, items, total, name: session.metadata?.name, address: session.metadata?.address });
+          await Order.create({ 
+            userId, 
+            items, 
+            total, 
+            name: session.metadata?.name, 
+            address: session.metadata?.address, 
+            email 
+          });
+          const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+              user: process.env.EMAIL_USER,
+              pass: process.env.EMAIL_PASS,
+            },
+          });
+
+          const mailOptions = {
+            from: process.env.EMAIL_USER,
+            to: email,
+            subject: 'Order Confirmation -  ShopBest',
+            text: `
+            Thank you for your order, ${session.metadata?.name || customer}!\n\n
+            Order total: $${total}\n
+            Shipping address: ${session.metadata?.address}\n\n
+            We'll notify you when your order ships!
+            `,
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error('Error sending email:', error);
+            } else {
+              console.log('Email sent:', info.response);
+            }
+          });
+
           await Cart.findOneAndUpdate({ userId }, { items: [] });
           console.log(`Order saved and cart cleared for user ${userId}`);
         } else {
