@@ -28,6 +28,10 @@ Your one-stop shop for everything you need — built to showcase modern full-sta
 - Authentication state managed globally using Zustand
 - Persistent cart system tied to user ID in MongoDB
 - Product listing and featured products fetched from backend API
+- **Order checkout with Stripe integration**
+- **Order confirmation emails sent automatically after successful payment**
+- **Order history page for users**
+- **Wishlist feature for saving favorite products**
 - Responsive, modern UI with Tailwind CSS
 - CORS and Helmet for security
 - Ready for deployment on Vercel and Render
@@ -60,6 +64,8 @@ Your one-stop shop for everything you need — built to showcase modern full-sta
 - Node.js
 - MongoDB Atlas URI (or local MongoDB)
 - Vercel + Render accounts for deployment
+- **Stripe account and API keys**
+- **Gmail (or SMTP) credentials for order confirmation emails**
 
 ### 🔧 Setup
 
@@ -79,6 +85,10 @@ Your one-stop shop for everything you need — built to showcase modern full-sta
      CLIENT_ORIGIN=https://shopbest-project.vercel.app
      JWT_SECRET=your_jwt_secret
      PORT=5000
+     STRIPE_SECRET_KEY=your_stripe_secret_key
+     STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+     EMAIL_USER=your_email@gmail.com
+     EMAIL_PASS=your_app_password
      ```
 
 3. **Start backend**
@@ -104,16 +114,25 @@ Your one-stop shop for everything you need — built to showcase modern full-sta
 * **Frontend:** Deployed on Vercel. Just connect GitHub repo and it auto-deploys.
 * **Backend:** Deployed on Render. Configure environment variables in dashboard.
 * **Ping Service:** Use [UptimeRobot](https://uptimerobot.com/) to prevent backend sleep.
+* **Stripe Webhooks:** In production, set your Render backend `/webhook` endpoint in the Stripe dashboard.
 
 ---
 
 ## 📌 TODO
 
-* [ ] Checkouts DB storing
-* [ ] Order history
+* [x] Checkouts DB storing
+* [x] Order history
+* [x] Wishlist feature
 * [ ] Admin product dashboard
-* [ ] Wishlist feature
 
+---
+
+## 🧑‍💻 Recent Major Features
+
+- Stripe-powered checkout with order storing and confirmation emails
+- Order history page for users
+- Wishlist feature (add/remove/view)
+- Admin dashboard (coming soon)
 
 ---
 
