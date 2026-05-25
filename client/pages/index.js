@@ -64,6 +64,7 @@ const Logout = ({ user, setUser }) => {
 export default function LandingPage() {
   const [products, setProducts] = useState([]);
   const [featuredProducts, setFeaturedProducts] = useState([]);
+  const [featuredLoading, setFeaturedLoading] = useState(true);
   const [user, setUser] = useState(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const { refreshUser, setGlobalLoading } = useAppStore();
@@ -86,7 +87,7 @@ export default function LandingPage() {
         setFeaturedProducts(Array.isArray(data) ? data : []);
       })
       .catch(err => console.error('Failed to fetch featured products:', err))
-      .finally(() => setGlobalLoading(false));
+      .finally(() => { setGlobalLoading(false); setFeaturedLoading(false); });
   }, []);
 
   useEffect(() => {
@@ -236,7 +237,14 @@ export default function LandingPage() {
         <section className="py-16 px-8">
           <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center text-blue-400">Featured Products</h2>
           <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
-            {featuredProducts.map(product => (
+            {featuredLoading ? Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="bg-gray-900 rounded-lg p-4 border border-blue-900 flex flex-col items-center animate-pulse" style={{ minHeight: "340px" }}>
+                <div className="w-40 h-40 bg-gray-700 rounded-lg mb-4" />
+                <div className="h-4 bg-gray-700 rounded w-3/4 mb-2" />
+                <div className="h-4 bg-gray-700 rounded w-1/2 mb-4" />
+                <div className="h-4 bg-gray-700 rounded w-1/4 mt-auto" />
+              </div>
+            )) : featuredProducts.map(product => (
               <Link
                 key={product.id}
                 href={`/products/${product.id}`}
@@ -274,26 +282,18 @@ export default function LandingPage() {
               </Link>
             ))}
           </div>
+
         </section>
-        {/* category previews */}
-        <section className="py-16 px-8">
-          <h2 className="text-2xl md:text-3xl font-bold mb-10 text-center text-blue-400">Browse by Category</h2>
-          <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
-            {[
-              { name: "Men's Clothing", category: "men's clothing" },
-              { name: "Women's Clothing", category: "women's clothing" },
-              { name: 'Electronics', category: 'electronics' },
-              { name: 'Jewelry', category: 'jewelery' },
-            ].map(({ name, category }) => (
-              <Link
-                key={category}
-                href={`/products?category=${encodeURIComponent(category)}`}
-                className="bg-gray-900 hover:bg-gradient-to-br hover:from-blue-700 hover:to-purple-700 p-6 rounded-lg text-center transition border border-blue-700 shadow"
-              >
-                <p className="text-lg font-semibold text-white">{name}</p>
-              </Link>
-            ))}
-          </div>
+        {/* start shopping CTA */}
+        <section className="py-16 px-8 flex flex-col items-center">
+          <h2 className="text-2xl md:text-3xl font-bold mb-4 text-center text-blue-400">Ready to Find Something You Love?</h2>
+          <p className="text-neutral-400 mb-8 text-center max-w-md">Hundreds of products across every category — all waiting for you.</p>
+          <Link
+            href="/products"
+            className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 hover:from-blue-600 hover:to-pink-600 text-white font-bold px-10 py-4 rounded-xl text-lg shadow-lg transition-all duration-300 hover:scale-105"
+          >
+            Start Shopping Now
+          </Link>
         </section>
 
       </section>
