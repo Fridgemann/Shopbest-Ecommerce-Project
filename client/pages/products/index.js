@@ -8,6 +8,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function Products() {
     const [products, setProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState('all');
     const router = useRouter();
     const { setGlobalLoading } = useAppStore();
@@ -18,7 +19,7 @@ export default function Products() {
             .then(res => res.json())
             .then(data => setProducts(data))
             .catch(err => console.error('Failed to fetch products:', err))
-            .finally(() => setGlobalLoading(false));
+            .finally(() => { setGlobalLoading(false); setLoading(false); });
     }, [setGlobalLoading]);
 
     // Set initial category from query param
@@ -60,7 +61,14 @@ export default function Products() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10">
-                {filteredProducts.map(product => (
+                {loading ? Array.from({ length: 8 }).map((_, i) => (
+                    <div key={i} className="bg-gray-900 rounded-2xl p-5 border border-blue-900 flex flex-col items-center animate-pulse" style={{ minHeight: "340px" }}>
+                        <div className="w-40 h-40 bg-gray-700 rounded-lg mb-4" />
+                        <div className="h-4 bg-gray-700 rounded w-3/4 mb-2" />
+                        <div className="h-4 bg-gray-700 rounded w-1/2 mb-4" />
+                        <div className="h-4 bg-gray-700 rounded w-1/4 mt-auto" />
+                    </div>
+                )) : filteredProducts.map(product => (
                     <Link
                         href={`/products/${product.id}`}
                         key={product.id}
